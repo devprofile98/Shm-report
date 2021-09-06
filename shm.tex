@@ -1,0 +1,86 @@
+\documentclass[a4paper, 12pt]{book}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{index}
+\usepackage{xepersian}
+
+\makeatletter
+\renewcommand\@endpart{\vfil
+              \if@twoside
+                \null
+                \thispagestyle{empty}%
+                \newpage
+              \fi
+              \if@tempswa
+                \twocolumn
+              \fi}
+\makeatother
+
+\settextfont{B Yekan}
+\setlatintextfont[Scale=1.2]{Times New Roman}
+
+\title{ مقدمه ای بر گرافیک کامپیوتر}
+\author{احمد منصوری و \lr{\textsf{\textbf{peter shirley}}}}
+\date{\lr{December 21, 2009}}
+
+\begin{document}
+\maketitle
+\let\cleardoublepage\clearpage
+
+\huge\textbf{چکیده}
+\normalsize
+\begin{flushright}
+  همزمان با پیدایش کامپیوتر ها، تلاش ها برای بهره بردن از توان آنها برای ابزار های \lr{Visualize} و دیگر ابزار ها برای 
+  استفاده از این قابلیت در زمینه های نظامی، فیلم و انیمیشن، شبیه سازی و بازی سازی شروع شد، این ابزار ها یا به صورت 
+  اختصاصی برای استفاده در صنایع خاص طراحی می شوند یا به صورت عمومی تر برای کاربرد های وسیع تری طراحی و توسعه می یابند.
+   طراحی و پیاده سازی موتور های گرافیکی به صورت کلی دارای پایه ها و دانشی یکسان از نحوه کار پردازنده ها و ریاضیات است.
+   
+\end{flushright}
+
+
+\tableofcontents
+
+\makeatletter
+\renewcommand\@endpart{\vfil
+              \if@twoside
+                \null
+                \thispagestyle{empty}%
+                \newpage
+              \fi
+              \if@tempswa
+                \twocolumn
+              \fi}
+\makeatother
+
+\part{گرافیک}
+
+\huge
+    مقدمه \\
+    
+\vspace*{2cm}
+\normalsize
+     در بخش اول به معرفی و توضیح قسمت های مربوط به \textbf{تصویر} در پروژه می پردازم، این قسمت متشکل از بخش هایی است که
+     این قسمت از موتور مسئولیت دریافت مدل های سه بعدی و اطلاعات مربوطه(\lr{\textbf{Textures}, \textbf{Normals}, \textbf{geometry}, ...})
+     و نمایش آن ها در صفحه را برعهده دارد، در این قسمت ما با استفاده از ریاضیات مدل ها را در فضای سه یعدی شبیه سازی می کنیم.
+
+\chapter{\lr{Renderer}}
+
+
+\section{\lr{Texture}}
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=12cm]{F:/project/shm_build/bin/screenshot.png}
+    \caption{\lr{\textit{object without Texture}}}
+    \label{fig:my_label}
+\end{figure}
+\pagebreak
+
+
+\part{فیزیک}
+\begin{center}
+    \chapter{\lr{Physics}}
+\end{center}
+\section{\lr{Particles}}
+\section{\lr{Rigid Bodies}}
+
+\end{document} 
