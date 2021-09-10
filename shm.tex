@@ -1,7 +1,12 @@
 \documentclass[a4paper, 12pt]{book}
+
 \usepackage{graphicx}
 \usepackage{wrapfig}
+\usepackage[font=small,labelfont=bf]{caption}
 \usepackage{index}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{listings}
 \usepackage{xepersian}
 
 \makeatletter
@@ -24,7 +29,45 @@
 
 
 \settextfont{B Yekan}
-\setlatintextfont[Scale=1.2]{Times New Roman}
+\setlatintextfont[Scale=1.2]{Arial}
+\DefaultMathsDigits
+
+% -- define code style 
+
+\definecolor{customblue}{RGB}{59, 59, 59}
+\definecolor{keywordcolor}{RGB}{255, 196, 0}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{stringcolor}{RGB}{255, 196, 0}
+\definecolor{light-gray}{gray}{0.95}
+\lstdefinestyle{C++Style}{%
+  backgroundcolor=\color{customblue},
+  breaklines=true,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{keywordcolor},
+  commentstyle=\color{stringcolor}\textit,
+  stringstyle=\color{codepurple},
+  numbers=left,
+  numberstyle={\tiny\lr},
+  showspaces = false,
+  showstringspaces = false,
+  tabsize = 2,
+  frame=single,
+  xleftmargin=5pt,
+  xrightmargin=3pt,
+  language =  C++,
+  aboveskip = 20pt,
+  rulecolor=\color{stringcolor},
+  captiondirection=RTL,
+}
+
+
+\lstnewenvironment{C++Code}[1][]
+{%
+    \lstset{style=C++Style, #1}%
+}{}
+
+
+% end code style defenition
 
 \title{ مقدمه ای بر گرافیک کامپیوتر}
 \author{احمد منصوری و \lr{\textsf{\textbf{peter shirley}}}}
@@ -45,7 +88,10 @@
 \end{flushright}
 
 
-\tableofcontents
+\begingroup
+  \hypersetup{hidelinks}
+  \tableofcontents
+\endgroup
 
 \makeatletter
 \renewcommand\@endpart{\vfil
@@ -78,25 +124,58 @@
 
 \addcontentsline{toc}{section}{پنجره ها و کانتکست ها}
 \section*{\huge{پنجره ها و کانتکست ها}}
-\vspace*{2cm}
+\vspace*{0.6cm}
 
 \subsection*{\lr{openGL}}
 \noindent
 \normalsize
     \lrboldit{OpenGL} یک \lrboldit{api} چند زبانه و کراس پلتفرم است که برای به تصویر کشیدن تصاویر دو بعدی و سه بعدی با استفاده از بردار ها
     اسفاده می شود، معمولا از \lrboldit{OpenGL} برای برقراری ارتباط با واحد پردازش گرافیکی \lrboldit{GPU} و بهره بردن از سرعت سخت افزار مخصوص برای رندر استفاده می شود.\par
-    نباید \lrit{OpenGL} را با یک کتابخانه\lrit{(library)} اشتباه گرفت، \lrbold{OpenGL} به صورت یک \lr{interface} و یک قراداد انتزاعی در ورژن های مختلف ارائه می شود که فروشندگان و سازنده های مختلف باید پیاده سازی ای منطبق با ایت قرارداد را انجام دهند.
     
+    همچنین \lrit{api} های دیگری نیز برای استفاده از قدرت سخت افزاری و پردازنده گرافیکی وجود دارند \lrit{Vulkan} نیز مانند \lrit{openGL} چند زبانی و چند سکویی است،
+    \lrit{DirectX} به صورت انحصاری توسط مایکروسافت توسعه می یابد و در سیستم عامل ویندوز استفاده می شود ، شرکت \lrbold{Apple} از \lrit{api} اختصاصی خود به نام \lrit{Metal}
+    به صورت انحصاری پشتیبانی می کند، دلیل انتخاب\lrit{openGL} در این پروژه چندسکویی بودن و ساختار ساده تر برای پروژه های آموزشی در زمینه \lrit{real-time rendering} می باشد.\par
+    
+    نباید \lrit{OpenGL} را با یک کتابخانه\lrit{(library)} اشتباه گرفت، \lrbold{OpenGL} به صورت یک \lr{interface} و یک قراداد انتزاعی در ورژن های مختلف ارائه می شود که فروشندگان و سازندگان\lrit{(vendor)} مختلف باید پیاده سازی ای منطبق با این قرارداد را انجام دهند.
+    پس از نصب درایور مربوط به پردازنده گرافیکی، برنامه نویس قابلیت دسترسی به تابع های مختلف که توسط \lrit{vendor} پیاده سازی شده را خواهد داشت.
+    برای استفاده از \lrit{\textsf{OpenGl}} نیاز به ابزار های دیگری نیز داریم، ابتدا نیاز داریم که یک \lrit{window} و یک \lrit{context} تعریف کنیم،
+    برای این کار از \lrbold{GLFW} استفاده می کنیم.
 
 
+\newpage
+\subsection*{\lr{GLFW}}
+\noindent
+\normalsize
+    یک کتابخانه برای ساختن \lrit{window} و \lrit{context} ها برای \lrit{openGL, openGL ES, Vulkan} است، این کتابخانه به زبان \lrbold{C} نوشته شده و \lrit{binding} های مختلف آن به زبان های مختلف موجود است، این کتابخانه همچنین توانایی کنترل کردن ورودی های مختلف مثل \lrit{keyboard, mouse, joystick} را داراست، ما برای استفاده از \lrit{openGL} نیاز به این کتابخانه یا مشابه آن داریم زیرا \lr{openGL} هیچگونه قابلیت پیشفرضی برای مدیریت \lr{window} یا \lr{context} ها یا مدیریت \lr{input} ندارد. همچنین \lr{GLFW} یک کتابخانه چندسکویی است و می توانیم آن را در سیستم عامل های مختلف استفاده کنیم، پروژه من نیز چندسکویی است، پس می توانیم از این کتابخانه سبک و چندسکویی استفاده کنیم.
+    \lr{windows}، پنجره ای است که \lr{GLFW} به وسیله امکانات فراهم شده در سطح سیستم عامل برای ما فراهم می کند، همچنین یک \lr{context} را می توانیم به عنوان یک شئ در نظر بگیریم که تمامی اطلاعات \lr{openGL} را به همراه دارد، اطلاعاتی مانند \lr{state} و  \lr{framebuffers}ها .
+    برای کنترل کردن ورودی ها، \lr{glfw} از دو روش استفاده می کند، برای ورودی\lrit{mouse} از \lr{callback function} ها استفاده می کند، اما برای ورودی \lr{keyboard} می توانیم از تابع های کتابخانه استفاده کنیم و به صورت مستقیم ورودی را دریافت کنیم.\par
+    حالا که به \lr{window} و \lr{context} دسترسی داریم، باید دسترسی به تابع های \lr{opengl} فراهم کنیم، برای این کار از \lrbold{GLAD} استفاده می کنیم.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=12cm]{F:/project/shm_build/bin/screenshot.png}
-    \caption{\lr{\textit{object without Texture}}}
+    \href{https://github.com/glfw}{
+        \includegraphics[width=3cm]{GLFW.png}
+    }
+    \caption{\lr{\textit{glfw logo}}}
     \label{fig:my_label}
 \end{figure}
-\pagebreak
+
+\newpage
+\subsection*{\lr{GLAD}}
+\noindent
+\normalsize
+    کتابخانه ای برای \lrit{load} کردن \lr{pointer} ها به توابع \lr{opengl} در هنگام \lr{runtime}.
+    این کتابخانه یکی از کتابخانه های\lr{OpenGL Loading Library} است، برای کار با \lr{opengl} ما حتما باید یکی از این کتابخانه هارا مورداستفاده قرار دهیم تا بتوانیم به توابع \lr{opengl} دسترسی داشته باشیم، این کتابخانه ها هم ویژگی های \lr{Core} که توسط \lr{opengl} مشخص شده را \lr{load} می کنند و هم ویژگی های \lr{extension} که توسط \lr{Vendor} ها به پیاده سازی آن ها از \lr{opengl} اضافه شده، علاوه بر این دیگر نیازی به اضافه کردن فایل های مربوط به \lr{opengl} نیست و این فایل ها به صورت خودکار همه موارد را تنطیم می کنند.
+    \lr{Glad} یک \lr{generator} است که براساس پارامتر هایی که کاربر انتخاب می کند یک فایل حاوی تمامی تعریف های مربوط به \lr{constant} و تابع ها و ... به ما ارائه می کند، بعد از دانلود این فایل و اضافه کردن به آن به پروژه از طریق کد زیر می توانیم تمامی \lr{opengl function poiter} هارا در \lr{runtime} بارگزاری کنیم.
+    
+    \begin{LTR}
+        \begin{lstlisting}[style=C++Style,caption=\rl{load opengl function pointer}]
+          int main()
+          {
+            return 0;
+          }
+        \end{lstlisting}
+    \end{LTR}
 
 
 \part{فیزیک}
