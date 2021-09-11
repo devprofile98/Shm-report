@@ -9,6 +9,8 @@
 \usepackage{listings}
 \usepackage{xepersian}
 
+\captionsetup[figure]{font=small}
+
 \makeatletter
 \renewcommand\@endpart{\vfil
               \if@twoside
@@ -32,12 +34,12 @@
 \setlatintextfont[Scale=1.2]{Arial}
 \DefaultMathsDigits
 
-% -- define code style 
+% -- define code style
 
-\definecolor{customblue}{RGB}{59, 59, 59}
-\definecolor{keywordcolor}{RGB}{255, 196, 0}
+\definecolor{customblue}{RGB}{246, 247, 246}
+\definecolor{keywordcolor}{RGB}{157, 0, 236}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{stringcolor}{RGB}{255, 196, 0}
+\definecolor{stringcolor}{RGB}{0, 130, 0}
 \definecolor{light-gray}{gray}{0.95}
 \lstdefinestyle{C++Style}{%
   backgroundcolor=\color{customblue},
@@ -50,13 +52,13 @@
   numberstyle={\tiny\lr},
   showspaces = false,
   showstringspaces = false,
-  tabsize = 2,
+  tabsize = 4,
   frame=single,
-  xleftmargin=5pt,
-  xrightmargin=3pt,
+  xleftmargin=0pt,
+  xrightmargin=0pt,
   language =  C++,
   aboveskip = 20pt,
-  rulecolor=\color{stringcolor},
+  rulecolor=\color{customblue},
   captiondirection=RTL,
 }
 
@@ -131,11 +133,11 @@
 \normalsize
     \lrboldit{OpenGL} یک \lrboldit{api} چند زبانه و کراس پلتفرم است که برای به تصویر کشیدن تصاویر دو بعدی و سه بعدی با استفاده از بردار ها
     اسفاده می شود، معمولا از \lrboldit{OpenGL} برای برقراری ارتباط با واحد پردازش گرافیکی \lrboldit{GPU} و بهره بردن از سرعت سخت افزار مخصوص برای رندر استفاده می شود.\par
-    
+
     همچنین \lrit{api} های دیگری نیز برای استفاده از قدرت سخت افزاری و پردازنده گرافیکی وجود دارند \lrit{Vulkan} نیز مانند \lrit{openGL} چند زبانی و چند سکویی است،
     \lrit{DirectX} به صورت انحصاری توسط مایکروسافت توسعه می یابد و در سیستم عامل ویندوز استفاده می شود ، شرکت \lrbold{Apple} از \lrit{api} اختصاصی خود به نام \lrit{Metal}
     به صورت انحصاری پشتیبانی می کند، دلیل انتخاب\lrit{openGL} در این پروژه چندسکویی بودن و ساختار ساده تر برای پروژه های آموزشی در زمینه \lrit{real-time rendering} می باشد.\par
-    
+
     نباید \lrit{OpenGL} را با یک کتابخانه\lrit{(library)} اشتباه گرفت، \lrbold{OpenGL} به صورت یک \lr{interface} و یک قراداد انتزاعی در ورژن های مختلف ارائه می شود که فروشندگان و سازندگان\lrit{(vendor)} مختلف باید پیاده سازی ای منطبق با این قرارداد را انجام دهند.
     پس از نصب درایور مربوط به پردازنده گرافیکی، برنامه نویس قابلیت دسترسی به تابع های مختلف که توسط \lrit{vendor} پیاده سازی شده را خواهد داشت.
     برای استفاده از \lrit{\textsf{OpenGl}} نیاز به ابزار های دیگری نیز داریم، ابتدا نیاز داریم که یک \lrit{window} و یک \lrit{context} تعریف کنیم،
@@ -167,15 +169,113 @@
     کتابخانه ای برای \lrit{load} کردن \lr{pointer} ها به توابع \lr{opengl} در هنگام \lr{runtime}.
     این کتابخانه یکی از کتابخانه های\lr{OpenGL Loading Library} است، برای کار با \lr{opengl} ما حتما باید یکی از این کتابخانه هارا مورداستفاده قرار دهیم تا بتوانیم به توابع \lr{opengl} دسترسی داشته باشیم، این کتابخانه ها هم ویژگی های \lr{Core} که توسط \lr{opengl} مشخص شده را \lr{load} می کنند و هم ویژگی های \lr{extension} که توسط \lr{Vendor} ها به پیاده سازی آن ها از \lr{opengl} اضافه شده، علاوه بر این دیگر نیازی به اضافه کردن فایل های مربوط به \lr{opengl} نیست و این فایل ها به صورت خودکار همه موارد را تنطیم می کنند.
     \lr{Glad} یک \lr{generator} است که براساس پارامتر هایی که کاربر انتخاب می کند یک فایل حاوی تمامی تعریف های مربوط به \lr{constant} و تابع ها و ... به ما ارائه می کند، بعد از دانلود این فایل و اضافه کردن به آن به پروژه از طریق کد زیر می توانیم تمامی \lr{opengl function poiter} هارا در \lr{runtime} بارگزاری کنیم.
-    
+
     \begin{LTR}
-        \begin{lstlisting}[style=C++Style,caption=\rl{load opengl function pointer}]
-          int main()
-          {
-            return 0;
-          }
+        \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{load opengl function pointer}]
+// glad: load all OpenGL function pointers
+// ---------------------------------------
+if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+{
+    std::cout << "Failed to initialize GLAD" << std::endl;
+}
         \end{lstlisting}
     \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    پس از ساختن پنجره و \lr{context} و بارگزاری توابع، حالا آماده استفاده از \lr{openGL} هستیم.
+
+% --------------------------------------------------------
+% end of section
+
+
+% Section Start
+% --------------------------------------------------------
+
+
+\addcontentsline{toc}{section}{تصویر کردن داده ها}
+\section*{\huge{تصویر کردن داده ها}}
+\vspace*{0.6cm}
+
+\subsection*{\lr{Vertex Data}}
+\noindent
+\normalsize
+    برای \lrit{render} کردن تصاویر نیاز به اطلاعاتی داریم، با مثلث شروع می کنیم، مثلث در گرافیک کامپیوتری جایگاه ویژه ای دارد، مثلث ساده ترین شکلی است که تشکیل سطح میدهد، برای رسم کردن یک مثلث در صفحه نیاز سه نقطه داریم، با متصل کردن این سه نقطه به یکدیگر مثلث ساخته می شود، برای رسم مثلث در \lr{opengl} نیز شرابط به همین شکل است، ما نیاز به سه نقطه داریم، تفاوت این نقاط با نقطه های روی صفحه در ابعاد آن است، تقاط روی صفحه دوبعدی بودند، \lr{opengl} نقاط را به صورت سه بعدی دریافت می کند، هر کدام از این نقاط متشکل از سه مقدار برای \lrit{x, y,z} هستند، این نقاط را می توان به صورت بردار هایی در \lrit{Normalized Device Coordinates} نمایش داد، یک بردار در \lr{NDC} را به شکل رو به رو نمایش می دهیم: \\*
+    \begin{center}
+        \Large
+        $\vec{P} = (x, y, z)$
+    \end{center}
+    \normalsize
+    
+    مقادیر $x, y, z$ در این مختصات باید بین $[-1, +1]$ باشند، اگر مقداری خارج از این بازه باشد بر روی صفحه قابل مشاهده نیست. هر کدام از این نقاط را یک \lrit{Vertex} می نامیم.\par
+    بسته به درخواستی که از \lr{opengl} می کنیم، نحوه برخورد با این نقاط و در نتیجه نحوه به تصویر کشیدن این نقاط روی صفحه تغییر می کند،به عنوان مثال می توانیم با این نقاط به شکل مثلث، نقطه یا خط و اشکال دیگری برخورد کنیم.\par
+    برای برقراری ارتباط با \lr{opengl} از زبان برنامه نویسی \lrit{C} استفاده می کنیم، برای رسم کردن مثلث در این مرحله آرایه زیر را تعریف می کنیم:
+    \pagebreak
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{points for a triangle}]
+float vertices[] = {
+    // x  ,  y,    z
+    -0.5f, -0.5f, 0.0f, //p1
+     0.5f, -0.5f, 0.0f, //p2
+     0.0f,  0.5f, 0.0f  //p3
+};
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+     
+     در قطعه کد بالا از 9 عدد که همگی در بازه مشخص شده برای \lr{NDC} هستند استفاده کردیم، توجه کنید که اعداد در یک آرایه و یه صورت پشت سر هم به برنامه داده شده اند، هیچگونه جداسازی یا طبقه بندی بر اساس نقاط مختلف صورت نگرفته و همچنین این مقادیر هنوز بر روی \lr{Gpu} آپلود نشده اند، دسته بندی کردن این اطلاعات خام و آپلود بر روی \lr{Gpu} در دو فصل بعد شرح داده خواهد شد.
+     آرایه ای که تعریف کردیم تنها شامل مختصات نقاط مثلت بود، ما می توانیم هر گونه اطلاعاتی را به همین صورت در این آرایه اضافه کنیم و دسته بندی آن ها را مشخص کنیم و از آنها استفاده کنیم، برای مثال می توانیم اطلاعات مربوط به \lr{Color, Normal, Texture Coordinate, ...} را اضافه کنیم.\par
+     برای آپلود کردن داده ها بر روی پردازنده گرافیکی راه های مختلفی بسته به نیاز های مختلف وجود دارد، در بخش های بعدی چند نوع از این روش هارا می بینیم، برای تعریف کردن اطلاعاتی که باید بر روی \lr{Gpu} آپلود شود باید آن ها را در برنامه های به نام \lr{Shader} ها مشخص کنیم، در بخش بعدی درباره این برنامه ها صحبت می کنیم.
+    
+    
+\newpage
+\subsection*{\lr{Shaders}}
+\noindent
+\normalsize
+    کارت های گرافیک امروزی، تشکیل شده از تعداد بسیار زیادی از هسته های پردازشی هستند که وظیفه اجرای برنامه های کوچکی به نام \lrit{Shader} ها را بر عهده دارند.\\*
+    \lr{Shader} ها بیانگر \lr{Graphic Pipeline} بر روی کارت های گرافیک هستند، این ابزار به ما قابلیت کنترل و کدنویسی هر کدام از این مراحل را می دهند، بر روی کارت گرافیک های امروزی 
+    تمامی \lr{shader} ها به جز دو نوع از آن ها به صورت پیشفرض وجود دارد، این دو \lr{Vertex shader} و \lr{Fragment shader} هستند که حتما باید توسط برنامه نویس به کارت گرافیک داده شوند.
+    
+\vspace*{0.6cm}
+\begin{figure}[ht]
+    \centering
+    \href{https://learnopengl.com}{
+        \includegraphics[width=12cm]{pipeline.png}
+    }
+    \caption{\lr{Graphic pipeline: from learnopengl.com}}
+    \label{fig:my_label}
+\end{figure}
+\vspace*{0.6cm} 
+    
+    به طور کلی وظیفه \lrit{Vertex Shader} انتقال یک نقطه از فضای \lr{NDC} به فضای دیگر است، غالبا این فضا همان جهان بازی یا برنامه سه بعدی است، برای \lr{Transform} کردن فضای بازیبه فضایی دیگر از ماتریس ها استفاده می شود، به طوری که هر فضا دارای یک \lr{Transformation Matrix}  است، برای رسم کردن مثلث ما نیازی به تغییر فضا نداریم و در \lr{NDC} ادامه می دهیم.
+    یک \lr{Vertex shader} ساده به صورت زیر است:
+    
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{basic vertex shader}]
+#version 330 core
+layout (location = 0) in vec3 aPos;
+
+void main()
+{
+    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);
+}
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    کد بالا ساده ترین مدل برای استفاده از \lr{vertex shader} است، این کد به زبان \lr{GLSL(OpenGL Shading Language)} نوشته شده است، در خط اول ما نوع ویژگی ها را که پیش تر توضیح داده بودیم 
+    را مشخص کرده ایم، خط 2 یک متغیر از نوع \lr{vec3} به اسم \lr{aPos} تعریف کرده ایم، با استفاده از \lrit{layout (location = 0)} در این خط مشخص کرده ایم که این متغیر در حافظه در چه موقعیتی قرار میگیرد، این ویژگی برای وقتی که بخواهیم مقادیر دیگری به جز مختصات نقطه، در یک آرایه ذخیره کنیم و به کارت گرافیک دهیم کارایی دارد.
+    در نهایت متغیر \lr{(gl\_Position)} که نشان دهنده مکان این نقطه که در حال پردازش است می باشد را به وسیله مقادیری که از کد  \lr{C} خواندیم و مقدار 1 مقداردهی کردیم، مقدار چهارم در این فضا برای ما فایده ای ندارد اما در فضای سه یعدی با \lr{perspective view} به گار ما می آید.
+    
+
+\subsection*{\lr{Upload Data to GPU}}
+\newpage
+\subsection*{\lr{Render Loop}}
+
 
 
 \part{فیزیک}
