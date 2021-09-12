@@ -206,7 +206,7 @@ if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         $\vec{P} = (x, y, z)$
     \end{center}
     \normalsize
-    
+
     مقادیر $x, y, z$ در این مختصات باید بین $[-1, +1]$ باشند، اگر مقداری خارج از این بازه باشد بر روی صفحه قابل مشاهده نیست. هر کدام از این نقاط را یک \lrit{Vertex} می نامیم.\par
     بسته به درخواستی که از \lr{opengl} می کنیم، نحوه برخورد با این نقاط و در نتیجه نحوه به تصویر کشیدن این نقاط روی صفحه تغییر می کند،به عنوان مثال می توانیم با این نقاط به شکل مثلث، نقطه یا خط و اشکال دیگری برخورد کنیم.\par
     برای برقراری ارتباط با \lr{opengl} از زبان برنامه نویسی \lrit{C} استفاده می کنیم، برای رسم کردن مثلث در این مرحله آرایه زیر را تعریف می کنیم:
@@ -224,20 +224,20 @@ float vertices[] = {
     \end{LTR}
     \normalsize
     \vspace*{0.3cm}
-     
+
      در قطعه کد بالا از 9 عدد که همگی در بازه مشخص شده برای \lr{NDC} هستند استفاده کردیم، توجه کنید که اعداد در یک آرایه و یه صورت پشت سر هم به برنامه داده شده اند، هیچگونه جداسازی یا طبقه بندی بر اساس نقاط مختلف صورت نگرفته و همچنین این مقادیر هنوز بر روی \lr{Gpu} آپلود نشده اند، دسته بندی کردن این اطلاعات خام و آپلود بر روی \lr{Gpu} در دو فصل بعد شرح داده خواهد شد.
      آرایه ای که تعریف کردیم تنها شامل مختصات نقاط مثلت بود، ما می توانیم هر گونه اطلاعاتی را به همین صورت در این آرایه اضافه کنیم و دسته بندی آن ها را مشخص کنیم و از آنها استفاده کنیم، برای مثال می توانیم اطلاعات مربوط به \lr{Color, Normal, Texture Coordinate, ...} را اضافه کنیم.\par
      برای آپلود کردن داده ها بر روی پردازنده گرافیکی راه های مختلفی بسته به نیاز های مختلف وجود دارد، در بخش های بعدی چند نوع از این روش هارا می بینیم، برای تعریف کردن اطلاعاتی که باید بر روی \lr{Gpu} آپلود شود باید آن ها را در برنامه های به نام \lr{Shader} ها مشخص کنیم، در بخش بعدی درباره این برنامه ها صحبت می کنیم.
-    
-    
+
+
 \newpage
 \subsection*{\lr{Shaders}}
 \noindent
 \normalsize
     کارت های گرافیک امروزی، تشکیل شده از تعداد بسیار زیادی از هسته های پردازشی هستند که وظیفه اجرای برنامه های کوچکی به نام \lrit{Shader} ها را بر عهده دارند.\\*
-    \lr{Shader} ها بیانگر \lr{Graphic Pipeline} بر روی کارت های گرافیک هستند، این ابزار به ما قابلیت کنترل و کدنویسی هر کدام از این مراحل را می دهند، بر روی کارت گرافیک های امروزی 
+    \lr{Shader} ها بیانگر \lr{Graphic Pipeline} بر روی کارت های گرافیک هستند، این ابزار به ما قابلیت کنترل و کدنویسی هر کدام از این مراحل را می دهند، بر روی کارت گرافیک های امروزی
     تمامی \lr{shader} ها به جز دو نوع از آن ها به صورت پیشفرض وجود دارد، این دو \lr{Vertex shader} و \lr{Fragment shader} هستند که حتما باید توسط برنامه نویس به کارت گرافیک داده شوند.
-    
+
 \vspace*{0.6cm}
 \begin{figure}[ht]
     \centering
@@ -247,11 +247,11 @@ float vertices[] = {
     \caption{\lr{Graphic pipeline: from learnopengl.com}}
     \label{fig:my_label}
 \end{figure}
-\vspace*{0.6cm} 
-    
+\vspace*{0.6cm}
+
     به طور کلی وظیفه \lrit{Vertex Shader} انتقال یک نقطه از فضای \lr{NDC} به فضای دیگر است، غالبا این فضا همان جهان بازی یا برنامه سه بعدی است، برای \lr{Transform} کردن فضای بازیبه فضایی دیگر از ماتریس ها استفاده می شود، به طوری که هر فضا دارای یک \lr{Transformation Matrix}  است، برای رسم کردن مثلث ما نیازی به تغییر فضا نداریم و در \lr{NDC} ادامه می دهیم.
     یک \lr{Vertex shader} ساده به صورت زیر است:
-    
+
     \begin{LTR}
     \small
         \begin{lstlisting}[style=C++Style,caption=\lrit{basic vertex shader}]
@@ -266,13 +266,109 @@ void main()
     \end{LTR}
     \normalsize
     \vspace*{0.3cm}
-    
-    کد بالا ساده ترین مدل برای استفاده از \lr{vertex shader} است، این کد به زبان \lr{GLSL(OpenGL Shading Language)} نوشته شده است، در خط اول ما نوع ویژگی ها را که پیش تر توضیح داده بودیم 
-    را مشخص کرده ایم، خط 2 یک متغیر از نوع \lr{vec3} به اسم \lr{aPos} تعریف کرده ایم، با استفاده از \lrit{layout (location = 0)} در این خط مشخص کرده ایم که این متغیر در حافظه در چه موقعیتی قرار میگیرد، این ویژگی برای وقتی که بخواهیم مقادیر دیگری به جز مختصات نقطه، در یک آرایه ذخیره کنیم و به کارت گرافیک دهیم کارایی دارد.
-    در نهایت متغیر \lr{(gl\_Position)} که نشان دهنده مکان این نقطه که در حال پردازش است می باشد را به وسیله مقادیری که از کد  \lr{C} خواندیم و مقدار 1 مقداردهی کردیم، مقدار چهارم در این فضا برای ما فایده ای ندارد اما در فضای سه یعدی با \lr{perspective view} به گار ما می آید.
-    
 
+    کد بالا ساده ترین مدل برای استفاده از \lr{vertex shader} است، این کد به زبان \lr{GLSL(OpenGL Shading Language)} نوشته شده است، در خط اول ما نوع ویژگی ها را که پیش تر توضیح داده بودیم
+    را مشخص کرده ایم، خط 2 یک متغیر از نوع \lr{vec3} به اسم \lr{aPos} تعریف کرده ایم، با استفاده از \lrit{layout (location = 0)} در این خط مشخص کرده ایم که این متغیر در حافظه در چه موقعیتی قرار میگیرد، این ویژگی برای وقتی که بخواهیم مقادیر دیگری به جز مختصات نقطه، در یک آرایه ذخیره کنیم و به کارت گرافیک دهیم کارایی دارد.
+    در نهایت متغیر \lr{(gl\_Position)} که نشان دهنده مکان این نقطه که در حال پردازش است می باشد را به وسیله مقادیری که از کد  \lr{C} خواندیم و مقدار 1 مقداردهی کردیم، مقدار چهارم در این فضا کاربردی ندارد اما در فضای سه بعدی و در \lr{perspective view} به کار ما می آید.\par
+    مرحله بعد ساختن یک \lr{Fragment shader} است، وظیفه این بخش از \lr{pipeline} انجام محاسبات و تعیین رنگ پیکسل می باشد، تمامی محاسبات مربوط به نور، سایه، بازتاب و افکت های گرافیکی غالبا در این مرحله انجام می شود، البته این مقادیر در مراحل بعد ممکن است تغییر کنند.
+    یک \lr{fragment shader} ساده به صورت زیر است:
+
+    \newpage
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{basic fragment shader}]
+#version 330 core
+out vec4 FragColor;
+
+void main()
+{
+    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+}
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    کد بالا مقدار خروجی برای رنگ این \lr{fragment} را برابر با مقداری ثابت قرار می دهد، نوع متغیر \lr{FragColor} از نوع \lr{vec4} تعریف شده و مقادیری که دریافت کرده به ترتیب معنی \lr{red, green, blue, alpha} را می دهند، مقادیر باید بین صفر و یک باشند.\par
+    حالا هر کدام از کد های بالارا \lr{compile} می کنیم و سپس به برنامه اصلی که روی \lr{Gpu} قرار می گیرد متصل می کنیم، این برنامه را \lr{shader program} می نامیم، قطعه کد پایین مراحل \lr{compile} و \lr{link} کردن \lr{shader program} را نشان می دهد.
+    
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{compile and link shaders to shader program}]
+// hold Vertex shader ID
+unsigned int vertexShader;
+// create a shader of vertex type
+vertexShader = glCreateShader(GL_VERTEX_SHADER);
+// upload source code
+glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+// compile vertex shader source
+glCompileShader(vertexShader);
+// -------------------------------------------------
+// hold Fragment shader ID
+unsigned int fragmentShader;
+//create a shader of frament type
+fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+// upload source
+glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL); 
+// compile fragment shader source
+glCompileShader(fragmentShader);    
+// -------------------------------------------------
+// hold shader program ID
+unsigned int shaderProgram; 
+// create a shader program
+shaderProgram = glCreateProgram();
+// attach vertex shader to program
+glAttachShader(shaderProgram, vertexShader);
+// attach fragment shader to program
+glAttachShader(shaderProgram, fragmentShader);
+glLinkProgram(shaderProgram); // link the program
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    حالا می توانیم از این \lr{shader program} برای تصویر کردن داده ها استفاده کنیم، در بخش بعد داده ها را بر روی \lr{Gpu} بارگزاری می کنیم.
+
+\newpage
 \subsection*{\lr{Upload Data to GPU}}
+\noindent
+\normalsize
+    برای استفاده از مشخصات نقاطی که تعریف کردیم باید آن هارا روی \lr{memory} کارت گرافیک آپلود کنیم، انتقال اطلاعات بین \lr{cpu} و \lr{gpu} نسبتا کند است، پس سعی می کنیم اطلاعات هر چه بیشتری را در یک بار انتفال منتقل کنیم، برای مدیریت حافظه بر روی کارت گرافیک از \lr{vbo(vertex buffer object)} استفاده می کنیم، این بافر ها قابلیت نگهداری تعداد زیادی از داده ها را داند، برای ساختن یک \lr{buffer} در \lr{opengl} و نگهداری مشخصه بافر ایجاد شده به صورت زیر عمل می کنیم:
+
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{creating a buffer object}]
+unsigned int VBO;
+glGenBuffers(1, &VBO); 
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    برای استفاده کردن از این بافر و ارسال اطلاعات باید آن را \lr{bind} کنیم:
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{binding to target gl\_array\_buffer}]
+glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    حالا که بافر \lr{bind} شده است، می توانیم داده هایی که در آرایه \lr{vertices} تعریف کردیم را به \lr{gpu memory} منتقل کنیم:
+        \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{uploading data for static draw}]
+glBufferData(GL_ARRAY_BUFFER,
+             sizeof(vertices),
+             vertices,
+             GL_STATIC_DRAW);
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    حالا داده های ما بر روی \lr{gpu} قرار گرفته اند، آرگومان آخری که به تابع بالا دادیم به این معنی است که این داده ها مستعد تغییر نیستند، یعنی نوشتن بر روی آن ها زیاد صورت نمی گیرد اما باید برای خوانده شدن به سرعت در دسترس باشند زیرا به مراتب خوانده می شوند، این به گرافیک کمک می کند تا داده هارا در جایی از حافظه قرار دهد تا این ویژگی ها را داشته باشد.
+
 \newpage
 \subsection*{\lr{Render Loop}}
 
