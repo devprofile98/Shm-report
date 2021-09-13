@@ -290,7 +290,7 @@ void main()
     \vspace*{0.3cm}
     کد بالا مقدار خروجی برای رنگ این \lr{fragment} را برابر با مقداری ثابت قرار می دهد، نوع متغیر \lr{FragColor} از نوع \lr{vec4} تعریف شده و مقادیری که دریافت کرده به ترتیب معنی \lr{red, green, blue, alpha} را می دهند، مقادیر باید بین صفر و یک باشند.\par
     حالا هر کدام از کد های بالارا \lr{compile} می کنیم و سپس به برنامه اصلی که روی \lr{Gpu} قرار می گیرد متصل می کنیم، این برنامه را \lr{shader program} می نامیم، قطعه کد پایین مراحل \lr{compile} و \lr{link} کردن \lr{shader program} را نشان می دهد.
-    
+
     \begin{LTR}
     \small
         \begin{lstlisting}[style=C++Style,caption=\lrit{compile and link shaders to shader program}]
@@ -308,12 +308,12 @@ unsigned int fragmentShader;
 //create a shader of frament type
 fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 // upload source
-glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL); 
+glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 // compile fragment shader source
-glCompileShader(fragmentShader);    
+glCompileShader(fragmentShader);
 // -------------------------------------------------
 // hold shader program ID
-unsigned int shaderProgram; 
+unsigned int shaderProgram;
 // create a shader program
 shaderProgram = glCreateProgram();
 // attach vertex shader to program
@@ -325,7 +325,7 @@ glLinkProgram(shaderProgram); // link the program
     \end{LTR}
     \normalsize
     \vspace*{0.3cm}
-    
+
     حالا می توانیم از این \lr{shader program} برای تصویر کردن داده ها استفاده کنیم، در بخش بعد داده ها را بر روی \lr{Gpu} بارگزاری می کنیم.
 
 \newpage
@@ -338,12 +338,12 @@ glLinkProgram(shaderProgram); // link the program
     \small
         \begin{lstlisting}[style=C++Style,caption=\lrit{creating a buffer object}]
 unsigned int VBO;
-glGenBuffers(1, &VBO); 
+glGenBuffers(1, &VBO);
         \end{lstlisting}
     \end{LTR}
     \normalsize
     \vspace*{0.3cm}
-    
+
     برای استفاده کردن از این بافر و ارسال اطلاعات باید آن را \lr{bind} کنیم:
     \begin{LTR}
     \small
@@ -353,7 +353,7 @@ glBindBuffer(GL_ARRAY_BUFFER, VBO);
     \end{LTR}
     \normalsize
     \vspace*{0.3cm}
-    
+
     حالا که بافر \lr{bind} شده است، می توانیم داده هایی که در آرایه \lr{vertices} تعریف کردیم را به \lr{gpu memory} منتقل کنیم:
         \begin{LTR}
     \small
@@ -366,13 +366,105 @@ glBufferData(GL_ARRAY_BUFFER,
     \end{LTR}
     \normalsize
     \vspace*{0.3cm}
-    
+
     حالا داده های ما بر روی \lr{gpu} قرار گرفته اند، آرگومان آخری که به تابع بالا دادیم به این معنی است که این داده ها مستعد تغییر نیستند، یعنی نوشتن بر روی آن ها زیاد صورت نمی گیرد اما باید برای خوانده شدن به سرعت در دسترس باشند زیرا به مراتب خوانده می شوند، این به گرافیک کمک می کند تا داده هارا در جایی از حافظه قرار دهد تا این ویژگی ها را داشته باشد.
+
+    داده هایی که بر روی کارت گرافیک دادیم داده خام هستند، باید برای \lr{vertex shader} مشخص کنیم که به چه صورت باید داده هارا تفسیر کند، برای استفاده از ویژگی \lr{attribute} ها در \lr{vertex shader} باید نوع تفسیر داده هارا نیز به صورت دستی مشخص کنیم، به اینکار \lr{Linking Vertex Attribute} می گویند.
+
+    \vspace*{0.6cm}
+\begin{figure}[ht]
+    \centering
+    \href{https://learnopengl.com}{
+        \includegraphics[width=12cm]{images/shm-linking-vertex-attribute.png}
+    }
+    \caption{\lr{Graphic pipeline: from learnopengl.com}}
+    \label{fig:my_label}
+\end{figure}
+\vspace*{0.6cm}
+
+    برای انجام اینکار باید مقدار چند ویژگی را بدانیم:
+\begin{persian}
+    \begin{enumerate}
+      \item اولین آرگومان برابر با مقداری است که برای متغیر \lr{aPos} در \lr{vertex shader} به وسیله \lr{layout (location = 0)} مشخص کردیم که در این مورد برابر با صفر است.
+      \item آرگومان دوم مشخص کننده تعداد متغیر های است که باید به عنوان یک \lr{vertex} شناسایی شوند، این مقدار برای مثال ما برابر 3 است.
+      \item این آرگومان مشخص کننده نوع داده هایی است که بارگزاری شده، در این مورد \lr{float} است.
+      \item مشخص می کند که داده ها نیاز به نرمال سازی دارند یا خیر.
+      \item این مقدار مشخص می کند چند \lr{byte} داده باید برای این \lr{vertex} خوانده شود، به این مقدار \lr{stride} می گویند.
+      \item مقدار آخر در مورد مثال ما کاربرد ندارد، در مثال های بعدی می بینیم که مقادیر مربوط به رنگ و دیگر ویژگی های یک نقطه را در به صورت پیوسته در آرایه \lr{vertices} اضافه می کنیم، آنگاه باید از \lr{offset} برای مشخص کردن هر کدام از این ویژگی ها استفاده کنیم.
+    \end{enumerate}
+\end{persian}
+
+    شکل 3.1 متناسب با توضیحات ساخته شده.
+
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{link vertex attribute to vertex data}]
+glVertexAttribPointer(
+    0, // layout (location = 0)
+    3, // 3 value for this vertex exists
+    GL_FLOAT, // type of each value in vertex
+    GL_FALSE, // no need to normalize data
+    3 * sizeof(float), // 3 (size of) float in each vertex 
+    (void*)0  //no offset 
+    );
+                      
+glEnableVertexAttribArray(0); 
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    در پروژه های بزرگ تر انجام دادن این عملیات برای تک تک اشیاء موجود در بازی بیهوده و زمان گیر است، برای همین از یکی دیگر از انواع بافر ها به اسم \lr{vertex array object} استفاده می کنیم، این بافر تمامی مراحل قبل و فعال سازی \lr{vertex attribute} ها را ذخیره می کند و دفعات بعد نیازی به انجام تمامی این مراحل نیست و ما فقط باید \lr{VAO} را \lr{bind} کنیم:
+    
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{link vertex attribute to vertex data}]
+unsigned int VAO;
+glGenVertexArrays(1, &VAO); 
+// 2. copy our vertices array in a buffer for OpenGL to use
+glBindBuffer(GL_ARRAY_BUFFER, VBO);
+glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+// 3. then set our vertex attributes pointers
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+glEnableVertexAttribArray(0);
+ 
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+
+
+    حالا می توانیم با استفاده \lr{shader program} که \lr{vao} مثلث را بر روی صفحه رسم کنیم، این کار را در بخش بعدی انجام می دهیم.
 
 \newpage
 \subsection*{\lr{Render Loop}}
+\noindent
+\normalsize
+    حالا برای رسم کردن مثلث نیاز به کدهای زیر داریم:
 
-
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{link vertex attribute to vertex data}]
+glUseProgram(shaderProgram);
+glBindVertexArray(VAO);
+glDrawArrays(GL_TRIANGLES, 0, 3);
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    ابتدا \lr{shader program} را فعال می کنیم، سپس \lr{VAO} که ساختیم را \lr{bind} می کنیم، حالا تمامی داده ها و تفسیر ها آماده هستند، برای رسم از تابع خط آخر می خواهیم که با داده ها تشکیل مثلث بدهد، ابتدای و انتهای بایت هایی که باید از \lr{vertex array} بخواند را مشخص می کنیم، پس کامپایل کردن و اجرای برنامه با شکل زیر رو به رو می شویم.
+    
+\vspace*{0.3cm}
+\begin{figure}[ht]
+    \centering
+    \href{https://learnopengl.com}{
+        \includegraphics[width=10cm]{images/hellotriangle.png}
+    }
+    \caption{\lr{hello triangle}}
+    \label{fig:my_label}
+\end{figure}
+\vspace*{0.3cm}
 
 \part{فیزیک}
 \begin{center}
