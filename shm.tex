@@ -404,30 +404,30 @@ glVertexAttribPointer(
     3, // 3 value for this vertex exists
     GL_FLOAT, // type of each value in vertex
     GL_FALSE, // no need to normalize data
-    3 * sizeof(float), // 3 (size of) float in each vertex 
-    (void*)0  //no offset 
+    3 * sizeof(float), // 3 (size of) float in each vertex
+    (void*)0  //no offset
     );
-                      
-glEnableVertexAttribArray(0); 
+
+glEnableVertexAttribArray(0);
         \end{lstlisting}
     \end{LTR}
     \normalsize
     \vspace*{0.3cm}
-    
+
     در پروژه های بزرگ تر انجام دادن این عملیات برای تک تک اشیاء موجود در بازی بیهوده و زمان گیر است، برای همین از یکی دیگر از انواع بافر ها به اسم \lr{vertex array object} استفاده می کنیم، این بافر تمامی مراحل قبل و فعال سازی \lr{vertex attribute} ها را ذخیره می کند و دفعات بعد نیازی به انجام تمامی این مراحل نیست و ما فقط باید \lr{VAO} را \lr{bind} کنیم:
-    
+
     \begin{LTR}
     \small
         \begin{lstlisting}[style=C++Style,caption=\lrit{link vertex attribute to vertex data}]
 unsigned int VAO;
-glGenVertexArrays(1, &VAO); 
+glGenVertexArrays(1, &VAO);
 // 2. copy our vertices array in a buffer for OpenGL to use
 glBindBuffer(GL_ARRAY_BUFFER, VBO);
 glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 // 3. then set our vertex attributes pointers
 glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 glEnableVertexAttribArray(0);
- 
+
         \end{lstlisting}
     \end{LTR}
     \normalsize
@@ -452,9 +452,9 @@ glDrawArrays(GL_TRIANGLES, 0, 3);
     \end{LTR}
     \normalsize
     \vspace*{0.3cm}
-    
+
     ابتدا \lr{shader program} را فعال می کنیم، سپس \lr{VAO} که ساختیم را \lr{bind} می کنیم، حالا تمامی داده ها و تفسیر ها آماده هستند، برای رسم از تابع خط آخر می خواهیم که با داده ها تشکیل مثلث بدهد، ابتدای و انتهای بایت هایی که باید از \lr{vertex array} بخواند را مشخص می کنیم، پس کامپایل کردن و اجرای برنامه با شکل زیر رو به رو می شویم.
-    
+
 \vspace*{0.3cm}
 \begin{figure}[ht]
     \centering
@@ -465,6 +465,216 @@ glDrawArrays(GL_TRIANGLES, 0, 3);
     \label{fig:my_label}
 \end{figure}
 \vspace*{0.3cm}
+
+\newpage
+    برای اینکه بتوانیم دیگر ویژگی های مدل هارا به \lr{Gpu} ارسال کنیم و از آن ها استفاده کنیم می توانیم از چند \lr{attribute} یا از نوعی از متغیر ها به اسم \lr{uniform} استفاده کنیم، در ابتدا برای افزودن رنگ به هر کدام از \lr{vertex} ها از \lr{attribute} های \lr{vertex shader} استفاده می کنیم، برای این کار کد \lr{vertex shader}  را به شکل زیر تغییر می دهیم:
+    
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{declare and use aColor}]
+#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec3 aColor
+
+out vec3 ourColor;
+
+void main()
+{
+    gl_Position = vec4(aPos, 1.0);
+    ourColor = aColor
+} 
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    و کد \lr{fragment shader} را به شکل زیر می نویسیم تا بتوانیم از مقادیر رنگ استفاده کنیم:
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{render fragment with color from vertex shader}]
+#version 330 core
+out vec4 FragColor;
+in vec3 ourColor;
+
+void main()
+{
+    FragColor = vec4(ourColor, 1.0);
+}
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm} 
+    
+    حالا داده های مربوط به رنگ هر \lr{vertex} را در انتهای داده های مربوط به همان \lr{vertex} اضافه می کنیم، کد به شکل زیر تغییر می کند:
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{position and color data in one array}]
+float vertices[] = {
+    // positions         // colors
+     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top
+}; 
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    داده هارا به شکل قبل به \lr{VBO} اضافه می کنیم، سپس \lr{VAO} را \lr{bind} می کنیم، یک مرحله جدید در \lr{link vertex attribute} برای رنگ ها اضافه شده است، این مرحله به شکل زیر است:
+       \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{position and color data in one array}]
+// position attribute
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+glEnableVertexAttribArray(0);
+// color attribute
+glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+glEnableVertexAttribArray(1);
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm} 
+    
+    همانطور که می بینیم در این مرحله متغیر های مربوط \lr{stride} و \lr{offset} به شکل جدید برای استفاده از و تفسیر تمام داده برای \lr{gpu} تغییر کرده اند، در خط 5 کد بالا متغیر \lr{offset} نشان دهنده این است که برای خواندن سه مقدار برای رنگ، باید \lr{offset} را برابر 3 قرار دهیم تا سه مقدار اول که برای داده های مکان نقطه تعریف کرده ایم در نظر نگیرد، همچنین متغیر \lr{stride} را برابر با شش قرار دادیم، این به معنی این است که هر 6 مقدار در آرایه بیانگر ویژگی ها برای یک نقطه متفاوت است.\par
+    رنگ مثلث به صورت زیر تغییر می کند:
+    
+\vspace*{0.3cm}
+\begin{figure}[ht]
+    \centering
+    \href{https://github.com/devprofile98/shm}{
+        \includegraphics[width=10cm]{images/colorfultriangle.png}
+    }
+    \caption{\lr{colorful triangle}}
+    \label{fig:my_label}
+\end{figure}
+\vspace*{0.3cm}
+    در مثال بالا \lr{opengl} مقدار رنگ سه نقطه را از ما دریافت کرد و به صورت خودکار مقدار رنگ بین این نقاط را به صورت خطی \lr{interpolate} کرد.\par
+    این روش برای مدل ها و اشیاء سه بعدی نه تنها کاربردی نیست بلکه هزینه زیادی دارد، روش بهتر برای مقدار دهی به رنگ و ایجاد جزئیات برای اشیاء استفاده از \lr{texture} ها است، در بخش بعد درباره تکسچرها توضیح می دهم.
+
+\newpage
+\subsection*{\lr{Textures}}
+\noindent
+\normalsize
+    تصور کنید می خواهیم یک دیوار را شبیه سازی کنیم، دیوار را می توانیم با چهار نقطه با استفاده از \lr{EBO( element buffer object)} بسازیم، این چهار نقطه برای ما تشکیل یک مربع یا مستطیل(دو مثلث که از وتر بر روی یکدیگر قرار گرفته اند) بسته به موقعیت نقاط می دهند. مرحله بعدی اضافه کردن جزئیات رنگ یعنی شکل آجر ها بر روی دیوار است، این کار به سادگی امکان پذیر نیست، زیرا ما فقط قابلیت تعیین چهار رنگ برای چهار نقطه را داریم، پس نمی توانیم با چهار رنگ و \lr{linear interpolation} که \lr{opengl} بین این رنگ ها انجام می دهد یک دیوار آجری رندر کنیم، راه حل این مشکل استفاده از یک \lr{texture} است، به صورت ساده می توانیم عکس یک دیوار آجری را به \lr{opengl} بدهیم و بخواهیم که به ازای هر \lr{fragment} از یکی از \lr{pixel} های عکسی که ما به عنوان \lr{texture} آپلود کرده ایم استفاده کند. برای استفاده از یک \lr{texture} ما باید مراحل زیر را انجام دهیم.
+
+\begin{persian}
+    \begin{enumerate}
+      \item اضافه کردن \lr{texture coordinates} به آرایه داده ها و آپلود آن بر روی \lr{vertex attribute}.
+      \item خواندن عکس از حافظه و آپلود کردن آن بر روی \lr{Gpu}.
+      \item تنظیم کردن حداقل برخی از ویژگی های تکسچر که به صورت پیشفرض مقداری ندارند.
+      \item استفاده از توابع \lr{GLSL} برای \lr{sample} کردن \lr{texture}
+    \end{enumerate}
+\end{persian}
+
+\newpage
+
+    در مرحله اول مقادیر \lr{texture coordinate} را به آرایه داده ها اضافه می کنیم:
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{position and color data in one array}]
+float vertices[] = {
+    // positions          // colors           // texture coords
+     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,
+     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,
+    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f 
+};
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm} 
+    
+    دقت کنید که باید مراحل \lr{linking vertex attribute} را برای مقادیر جدید انجام دهیم.
+    
+    حالا عکس را از دیسک می خوانیم، برای این کار از \href{https://github.com/nothings/stb}{\lrbold{stbi\_image}} استفاده می کنیم، این کتابخانه به صورت \lr{single header library} در دسترس است، این گونه کتابخانه در یک فایل نوشته شده اند و استفاده درست از آن ها با استفاده از \lr{define} است.
+    
+    پس از بازکردن عکس در کد باید یک \lr{texture} بسازیم، ابتدا یک شی\lr{texture} می سازیم و سپس می توانیم داده های عکسی که خواندیم را بر روی تکسچری که ساختیم \lr{upload} کنیم، اینکار به شیوه زیر انجام می گیرد:
+    
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{load and upload data to gpu}]
+unsigned int texture; // hold texture ID
+glGenTextures(1, &texture); // create texture object on gpu
+// bind texture to 2d_texture target
+glBindTexture(GL_TEXTURE_2D, texture);
+// upload image data to texture that is bound i.e texture variable
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height,
+    0, GL_RGB, GL_UNSIGNED_BYTE, data); // data is the Image
+// generating mip maps for this texture
+glGenerateMipmap(GL_TEXTURE_2D);
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm} 
+    
+    
+    نیاز داریم که برخی مقادیر را برای \lr{texture} تنظیم کنیم وگرنه با یک تکسچر سیاه رو به رو می شویم، مقادیر زیر برای تنظیم تکرار شدن تصویر در جهات مختلف و مشخص کردن الگوریتم مناسب برای زمان کوچک نمایی با بزرگ نمایی تصویر است، به صورت زیر این مقادیر را تنظیم می کنیم:
+    
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{set minimum setting for a texture}]
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm} 
+    
+    مختصات تکسچر را در \lr{vertex shader} به صورت یک \lr{vertex attribute} جدید تعریف می کنیم و به مرحله \lr{fragment shader} می فرستیم، ارسال این داده ها بین مراحل مختلف \lr{pipeline} را با استفاده از متغیر هایی که با \lr{in, out} تعریف می شوند انجام می دهیم، به این صورت که متغیر را در مرحله ای که زودتر انجام می شود(در این مورد \lr{vertex shader}) به صورت \lr{out} تعریف می کنیم و در مرحله بعد آن را با \lr{in} تعریف می کنیم، دقت کنید باید نام متغیر دقیقا برابر باشد، کد زیر به \lr{vertex shader} اضافه می کنیم:
+   
+       \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{vertex shader to use texture}]
+layout (location = 2) in vec2 aTexCoord;
+out vec2 TexCoord; // vec2 because of 2d image
+...
+void main()
+{
+    ....
+    TexCoord = aTexCoord;
+}
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    در قمست \lr{fragment shader} نیز کد به شکل زیر تغییر می کند:
+    
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{fragment shader to use texture}]
+#version 330 core
+out vec4 FragColor;
+...
+in vec2 TexCoord;
+
+uniform sampler2D ourTexture;
+
+void main()
+{
+    //built in texture function for sampling texture to fragment
+    FragColor = texture(ourTexture, TexCoord);
+}
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    نتیجه به شکل زیر در می آید:
+    
+\vspace*{0.3cm}
+\begin{figure}[ht]
+    \centering
+    \href{https://github.com/devprofile98/shm}{
+        \includegraphics[width=13cm]{images/texturedtriangle.png}
+    }
+    \caption{\lr{colorful triangle}}
+    \label{fig:my_label}
+\end{figure}
+\vspace*{0.3cm}
+    
 
 \part{فیزیک}
 \begin{center}
