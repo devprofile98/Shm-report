@@ -1,6 +1,7 @@
 \documentclass[a4paper, 12pt]{book}
 
 \usepackage{graphicx}
+\usepackage{float}
 \usepackage{wrapfig}
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage{index}
@@ -864,8 +865,9 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     \label{fig:my_label}
 \end{figure}
 
-    در حال حاظر تمام سطوح مقداری که بازتاب می کنند تنها به میزان زاویه با منبع نور بستگی دارد، برای این که بتوانیم این بازتاب را کنترل کنیم و سطوحی با میزان بازتاب متفاوت را تشکیل دهیم، در اینجا نیاز به جزئیات بیشتر نسبت به یک سطح داریم، همانگونه که قبل تر از \lr{texture} ها برای ایجاد جزئیات روی سطوح استفاده کردیم این بار نیز از نوع دیگری از تکسچر ها برای اینکار استفاده می کنیم، به این تکسچر ها \lr{specular map} می گوییم، برای گرفتن مقادیر برای هر پیکسل دقیقا مانند \lr{texture} ها کار می کنیم، یک نمونه از \lr{specular map} به شکل زیر است:
+    در حال حاظر تمام سطوح مقداری که بازتاب می کنند تنها به میزان زاویه با منبع نور بستگی دارد، برای این که بتوانیم این بازتاب را کنترل کنیم و سطوحی با میزان بازتاب متفاوت را تشکیل دهیم، در اینجا نیاز به جزئیات بیشتر نسبت به یک سطح داریم، همانگونه که قبل تر از \lr{texture} ها برای ایجاد جزئیات روی سطوح استفاده کردیم این بار نیز از نوع دیگری از تکسچر ها برای اینکار استفاده می کنیم، به این تکسچر ها \lr{specular map} می گوییم، برای گرفتن مقادیر برای هر پیکسل دقیقا مانند \lr{texture} ها کار می کنیم، یک نمونه از \lr{specular map} به شکل زیر است:\par
   
+      بعد از استفاده از این \lr{specular map} برای مدل اسلحه نتیجه به شکل زیر در می آید، می بینید که مقدار یازتاب در همه نقاط یکسان نیست:
 
 \begin{figure}[ht]
     \centering
@@ -876,17 +878,74 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     \label{fig:my_label}
 \end{figure}  
   
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
     \href{https://github.com/devprofile98/shm}{
-        \includegraphics[width=9cm]{images/handgun_S.jpg}
+        \includegraphics[width=9cm]{images/handgun-S.jpg}
     }
     \caption{\lr{a gun specular map}}
     \label{fig:my_label}
 \end{figure}
 
-    بعد از استفاده از این \lr{specular map} برای مدل اسلحه نتیجه به شکل زیر در می آید، می بینید که مقدار یازتاب در همه نقاط یکسان نیست:
+\newpage
+
+\subsection*{\lr{Shadows}}
+    الگوریتم های زیادی برای تولید سایه وجود دارند، برخی از این الگوریتم ها مناسب \lr{real-time} نیستند و به همین دلیل مورد بحث ما نیستند، این الگوریتم ها غالبا از روش های \lr{ray-tracing} سرچشمه می گیرند، در الگوریتم های \lr{ray-tracing} به صورت خودکار سایه ها تولید می شوند، دلیل آن نیز نرسیدن پرتو های نور به نقاط است.\par
+    روش هایی که برای تولید سایه در \lr{real-time} استفاده می کنیم شباهت زیادی از لحاظ تعریف به روش بالا دارند، باید سطوحی را پیدا کنیم که نور به آن ها نمی رسد، یکی از این روش ها \lr{shadow mapping} نام دارد، این روش و مشتقات آن در بازی کامپیوتری مورد استفاده قرار می گیرند. \lr{shadow mapping} روشی ساده است که در مراحلی که در زیر شرح می دهم قابل تولید است: اساس کار ایجاد نقشه ای است که با استفاده از آن می توانیم مشخص کنیم که نور به چه جسمی زودتر برخورد کرده و چه جسمی به نور نزدیک تر است
+
+\begin{figure}[H]
+    \centering
+    \href{https://github.com/devprofile98/shm}{
+        \includegraphics[width=11cm]{images/shadow.png}
+    }
+    \caption{\lr{absence of light - shadow}}
+    \label{fig:my_label}
+\end{figure}
+
+    همانگونه که در شکل بالا نیز پیداست، سایه به دلیل نرسیدن نور و غیاب نور در نقطه پدید می آید، در روش \lr{shadow mapping} ابتدا صحنه را از دید منبع نور به صورت ساده رندر می کنیم، در این عملیات ما \lr{fragment shader} را خالی می گذاریم، زیرا نیازی به خروجی آن نداریم، تنها کاری که باید انجام شود پر شدن \lr{depth buffer} است، این کار به صورت خودکار انجام می شود پس ما نیازی به نوشتن کد در \lr{fragment shader} نداریم، \lr{depth buffer} تشکیل شده را به یک تکسچر متصل می کنیم، به این صورت \lr{shadow map} ما آماده است.\par
+    بعد از اینکه \lr{shadow map} آماده شد، حالا صحنه را از اول و با تمام جزئیات موردنیاز رندر می کنیم، و در \lr{fragment shader} تصمیم می گیریم که آیا این نقطه نزدیک ترین نقطه در برخورد با پرتو نور است یا خیر، برای اینکار نیاز داریم که نقطه ای که در حال پردازش هست را به \lr{light space} ببریم، این کار در مرحله \lr{vertex shader} و توسط \lr{light Space Matrix} انجام می شود، مقدار این ضرب به مرحله \lr{fragment shader} فرستاده می شود و آن جا به شکل زیر برای محاسبه نور استفاده می شود:
     
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{calculate shadow}]
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // perform perspective divide
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // transform to [0,1] range
+    projCoords = projCoords * 0.5 + 0.5;
+    // get closest depth value from light's perspective (using [0,1] range fragPosLight as coords)
+    float closestDepth = texture(shadowMap, projCoords.xy).r;
+    // get depth of current fragment from light's perspective
+    float currentDepth = projCoords.z;
+    // check whether current frag pos is in shadow
+    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+
+    return shadow;
+} 
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+     در تابع بالا ابتدا مقادیر
+     $[x, y, z]$
+     تقسیم بر مقدار
+     $w$
+     می شوند زیرا \lr{light space matrix} به صورت \lr{orthogonal} محاسبه شده بود، زیرا همانطور که پیش تر گفتیم پرتو های نور با یکدیگر موازی هستند و اگر بخواهیم از دید منبع نور جهان را رندر کنیم باید از \lr{view matrix} ای استفاده کنیم که \lr{orthogonal} باشد، حالا اما برای استفاده در رندر نهایی نیاز به \lr{perspective view} داریم، برای همین این تقسیم را انجام می دهیم. در مرحله بعد مقادیر را به بازه 
+     $[0-1]$
+     می آوریم، از پیش میدانیم که مقادیر بین 
+     $[-1, 1]$
+     هستند پس با تقسیم کردن به دو و جمع با 0.5 به بازه دلخواه ما منتقل می شوند. در مرحله بعد مقدار \lr{closest depth} را از تکسچری که در مرحله قبل رندر کرده بودیم دریافت می کنیم، این مقدار، نزدیک ترین جسم به نور است، در خط بعد این مقدار را با عمق نقطه فعلی در نظر مقایسه می کنیم، اگر عمق فعلی از نزدیک ترین عمقی که داریم بیشتر باشد پس این پیکسل در سایه است پس مقدار 1.0 به معنی \lr{True} برمی گردانیم. حاصل کارهای بالا به ساختن سایه منجر می شود:
+     
+\begin{figure}[H]
+    \centering
+    \href{https://github.com/devprofile98/shm}{
+        \includegraphics[width=13cm]{images/sceme-shadow.png}
+    }
+    \caption{\lr{scene with shadow}}
+    \label{fig:my_label}
+\end{figure}
 
 \part{فیزیک}
 \begin{center}
