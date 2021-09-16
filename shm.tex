@@ -738,7 +738,7 @@ glm::mat4 proj = glm::perspective(
     \label{fig:my_label}
 \end{figure}
 
-    حالا که سه ماتریس \lr{model}, \lr{view} و \lr{projection} را در اختیار داریم می توانیم با ضرب کردن مقدار lr{x, y, z, 1} برای هر نقطه آن نقطه را به \lr{clip space} ببریم، به ترتیب با ضرب کردن هر یک از ماتریس هایی که پیش تر گفت شد به \lr{world space} سپس \lr{view space} و در آخر به \lr{clip space} می رویم، همچنین \lr{projection matrix} در نهایت تمامی مقادیر را به \lr{NDC} نیز منتقل می کند.\par
+    حالا که سه ماتریس \lr{model}, \lr{view} و \lr{projection} را در اختیار داریم می توانیم با ضرب کردن مقدار \lr{x, y, z, 1} برای هر نقطه آن نقطه را به \lr{clip space} ببریم، به ترتیب با ضرب کردن هر یک از ماتریس هایی که پیش تر گفت شد به \lr{world space} سپس \lr{view space} و در آخر به \lr{clip space} می رویم، همچنین \lr{projection matrix} در نهایت تمامی مقادیر را به \lr{NDC} نیز منتقل می کند.\par
     مقدار تمامی ماتریس های بالا را با استفاده از متغیر های \lr{uniform} به \lr{vertex shader} انتفال می دهیم، مقادیری از این سه ماتریس را که نیاز باشد در هر اجرا از \lr{render loop} دوباره بارگزاری می کنیم.\lr{vertex shader} به شکل زیر در می آید:
     \newpage
     \begin{LTR}
@@ -801,10 +801,92 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 \addcontentsline{toc}{section}{نورپردازی و سایه ها}
 \section*{\huge{نورپردازی و سایه ها}}
 \vspace*{0.6cm}
-\subsection*{\lr{Lights}}
 \noindent
 \normalsize
 
+    به صورت کلی در این پروژه سه مدل \lr{light caster}پیاده سازی شده است که  نور های\lr{Directional}, \lr{point} و \lr{spot} می باشند. 
+\subsection*{\lr{Directional Lights}}
+    به صورت ساده این گونه از نور را مشابه به نوری در نظر می گیریم که منبع آن در بی نهایت قرار دارد، این فرض باعث می شود که تمامی پرتو های آن تقریبا با هم موازی باشند، خورشید را به همین صورت یک \lr{directional light} در نظر می گیریم. برای بیان کردن این مدل از نور تنها نیاز به سه مولفه 
+    $(x, y, z)$
+    داریم تا بتوانیم یک جهت را در فضای سه بعدی مشخص کنیم که همان جهت پرتو های نور می باشد.\par
+    انواع دیگر نور به این شکل ساده نیستند و از ویژگی های دیگری نیز برخوردارند، برای مثال \lr{point light} دارای یک مولفه سه بعدی \lr{position} است، همچنین برای این که \lr{attenuation} یا میرایی نور را شبیه سازی کنیم از سه مقدار دیگر به عنوان \lr{constant}, \lr{linear} و \lr{quadratic} نیز استفاده می کنیم تا بتوانیم تقریبا میرایی نور به نسبت فاصله از منبع نور را شبیه سازی کنیم. به همین صورت مقادیر دیگری از جمله \lr{direction} را نیز داراست تا به کمک \lr{cut off} بتواند یک نور که میرایی دارد و در جهت و زاویه خاصی در حال تابیدن است شیسه سازی کند.
+    
+\subsection*{\lr{Lighting models}}
+    پیاده سازی و شبیه سازی رفتار واقعی نور کاری بسیار پیچیده است که قدرت سخت افزاری و هزینه زیادی را در بردارد، برای همین ما از روش هایی استفاده می کنیم که به صورت تقریبی بتوانند رفتار نور را به صورتی که ما از فیزیک می دانیم شبیه سازی کنند، برای شبیه سازی رفتار نور و برخورد آن با محیط از روش هایی مانند \lr{lambertian} و \lr{blinn-phong} استفاده می شود.
+    
+    \subsubsection*{\lr{Lambertian}}
+        این روش بر اساس زاویه تابش نور با سطح جسم عمل می کند، بدینگونه که اگر سطح عمود به جعت نور باشد تقریبا تمام انرژی نور را دریافت می کند، اگر سطح به صورت موازی با جهت نور قرار داشته باشد مقدار انرژی دریافتی از منبع نور برابر صفر خواهد بود، بقیه حالات قرارگیری این دو نسبت به بسته به 
+        $\cos \theta$
+        مقدار دهی می شود. این روش مستقل از مکان تماشاگر است، در دنیای واقعی معمولا بسته به \lr{material} استفاده شده در جشم امکان بازتاب و بازتاب بیشتر نور از سطح در زاویه های به خصوصی وجود دارد، روش \lr{phong} و بعد تر \lr{blinn} این ویژگی را در خود جای دادند.
+    
+    \subsubsection*{\lr{Blinn-Phong}}
+        این مدل متشکل از سه بخش اصلی است:\par
+    \lrbold{ambient}:
+    همانطور که در مدل \lr{lambertian} دیدیم، اگر بردار نرمال سطحی عمود بر جهت نور باشد، آن سطح هیچ مقداری از نور را دریافت نمی کند و کاملا تاریک خواهد ماند، این حالت در جهان واقعی نیز در نکان های کاملا بسته اتفاق می افتد و در دیگر حالات مقدار کمی نور از منابع مختلف باعث دیده شدن جسم می شوند، ما در این مدل مقداری از رنگ هر جسم را بدون توجه به زاویه تابش نور به آن جسم می دهیم، این باعث می شود که اجسام کاملا تاریک به وجود نیایند، به این مقدار \lr{ambient color} می گوییم.\par
+    
+    \lrbold{diffuse}:
+    این مقدار برابر با همان مقداری است که در مدل \lr{lambertian} نیز محاسبه کرده بودیم، بسته به جهت بردار نرمال سطح و جهت نور مقداری انرژی توسط هر سطح جذب می شود و باعث روشن شدن سطح می گردد.\par
+    
+    \lrbold{specular}
+    این مقدار باعث به وجود آمدن درخشندگی و بازتاب بیشتر نور نسبت به مکان ناظر می شود، این مقدار مستقل از مکان ناظر نیست، اگر بردار \lr{view direction} در جهت بردار بازتاب نور باشد از حداکثر درخشندگی و \lr{highlight} برخوردار می شود، برای محاسبه کردن جهت بازتاب از تابع \lr{reflect} در \lr{GLSL} استفاده می کنیم، سپس برای محاسبه مقدار بازتاب از ضرب داخلی بین بردار \lr{view direction} و \lr{reflectDir} استفاده می کنیم، همچنین برای اینکه از منفی شدن مقادیر جلوگیری کنیم از تابع \lr{max} نیز استفاده می کنیم:
+    
+
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{calculating specular component}]
+vec3 viewDir = normalize(viewPos - FragPos);
+vec3 reflectDir = reflect(-lightDir, norm);
+float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    مقدار 32 در کد بالا را مقدار \lr{shininess} می گویند، هر چقدر این مقدار بیشتر باشد درخشش بازتاب در آن نقطه بیشتر می شود.\par
+    در نهایت با جمع بستن این سه مقدار می توانیم تقریبی از رفتار نور در دنیای واقعی داشته باشیم، در این پروژه از روش \lr{blinn-phong} استفاده شده.
+    نتیجه استفاده از این روش به شکل زیر است:
+    
+\begin{figure}[ht]
+    \centering
+    \href{https://github.com/devprofile98/shm}{
+        \includegraphics[width=11cm]{images/phong1.png}
+    }
+    \caption{\lr{blinn-phong shading}}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \href{https://github.com/devprofile98/shm}{
+        \includegraphics[width=11cm]{images/phong2.png}
+    }
+    \caption{\lr{blinn-phong shading}}
+    \label{fig:my_label}
+\end{figure}
+
+    در حال حاظر تمام سطوح مقداری که بازتاب می کنند تنها به میزان زاویه با منبع نور بستگی دارد، برای این که بتوانیم این بازتاب را کنترل کنیم و سطوحی با میزان بازتاب متفاوت را تشکیل دهیم، در اینجا نیاز به جزئیات بیشتر نسبت به یک سطح داریم، همانگونه که قبل تر از \lr{texture} ها برای ایجاد جزئیات روی سطوح استفاده کردیم این بار نیز از نوع دیگری از تکسچر ها برای اینکار استفاده می کنیم، به این تکسچر ها \lr{specular map} می گوییم، برای گرفتن مقادیر برای هر پیکسل دقیقا مانند \lr{texture} ها کار می کنیم، یک نمونه از \lr{specular map} به شکل زیر است:
+  
+
+\begin{figure}[ht]
+    \centering
+    \href{https://github.com/devprofile98/shm}{
+        \includegraphics[width=15cm]{images/specular-gun.png}
+    }
+    \caption{\lr{phong shaded gun}}
+    \label{fig:my_label}
+\end{figure}  
+  
+\begin{figure}[ht]
+    \centering
+    \href{https://github.com/devprofile98/shm}{
+        \includegraphics[width=9cm]{images/handgun_S.jpg}
+    }
+    \caption{\lr{a gun specular map}}
+    \label{fig:my_label}
+\end{figure}
+
+    بعد از استفاده از این \lr{specular map} برای مدل اسلحه نتیجه به شکل زیر در می آید، می بینید که مقدار یازتاب در همه نقاط یکسان نیست:
+    
 
 \part{فیزیک}
 \begin{center}
