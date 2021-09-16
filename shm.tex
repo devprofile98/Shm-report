@@ -689,7 +689,7 @@ void main()
 \normalsize
 
     می توانیم با دو مثلث یک مربع درست کنیم، و با شش مربع یک مکعب تشکیل دهیم، و با استفاده از یک حلقه و چند \lr{draw call} چند مکعب بسازیم، اما در حال حاظر این کار فایده ای ندارد چون تمامی مکعب ها بر روی یکدیگر قرار می گیرند و. ما فقط یک مکعب را به صورت دو بعدی می بینیم، برای دیدن یک مکعب به یک محیط که شبیه ساز سه بعد باشد نیاز داریم، می توانیم مختصات مکعب هارا در حلقه تغییر دهیم و در قسمت های مختلف صفحه رندر کنیم، به این کار \lr{translate} کردن می گوییم، این عمل را با استفاده از یک ماتریس
-    $4x4$ 
+    $4x4$
     انجام می دهیم، یک \lr{translation matrix} به شکل زیر است:\par
 \begin{center}
 \setlength\arraycolsep{5pt}
@@ -704,28 +704,31 @@ void main()
 	\quad
 	$$
 \end{center}
-    
+
     مقادیر $(x, y, z)$ به ترتیب نشان دهنده تغییرات بر بردار متناسب با خود هستند، می توانیم هر کدام از نقاط مدل خود را توسط ماتریس بالا به نقطه جدید خود منتقل کنیم، ماتریس های \lr{rotation} و \lr{scale} نیز به ترتیب برای چرخش حول محور های مشخص و تغییر مقیاس استفاده می شوند، به حاصل ضرب این سه جزء یک \lr{model matrix} می گویند.\par
     پس از ضرب کردن \lr{model} در مختصات هر نقطه از شکل خود، اصطلاحا مختصات نقاط را در \lr{local space} به \lr{world space} برده ایم.\par
     برای انجام عملیات ریاضی مربوط به \lr{opengl} بر روی \lr{cpu} از کتابخانه \lrbold{GLM} استفاده می کنیم، این کتابخانه دارای کلاس ها و توابعی است که نمایانگر ساختار های ریاضیاتی مانند \lr{vector} ها و \lr{matrix} ها است، همچنین تعداد دیگری از توابع را داراست که برای ساده سازی کار ما فراهم شده اند، یکی از این توابع \lr{glm::LookAt} است، می  توانیم از این کلاس برای تشکیل یک \lr{view matrix} استفاده کنیم که نشانگر \lrbold{Camera} است.\par
     \vspace*{0.6cm}
     \subsubsection*{\lr{Camera}}
     \vspace*{0.3cm}
-    
+
     در دنیای واقعی اگر جسمی از ما فاصله بیشتری داشته باشد کوچکتر دیده می شود، این تعریف بسیار ساده و مختصری از \lr{perspective view} است، نور یازتاب شده از اجسام به مرکز چشم ما برمیگردد و اجسامی که نزدیک تر هستند بزرگتر دیده می شوند، در مقابل این مدل \lr{orthographic views} قرار دارند، در این مدل که در طراحی های صنعتی بیشتر کاربر دارد و در دنیای واقعی وجود ندارد، هر کدام از \lr{pixel} های صفحه پرتویی به صورت جداگانه از خود ساطع می کنند، همه این پرتوها موازی هستند و در نتیجه فاصله جسم از بیننده در نحوه دیدن شکل تاثیری ایجاد نمی کند، ما برای داشتن یک فضای سه بعدی واقع گرایانه از \lr{perspective projection} استفاده می کنیم، برای ساختن این ماتریس از \lr{GLM} به شکل زیر استفاده می کنیم:
-    
+
     \begin{LTR}
     \small
         \begin{lstlisting}[style=C++Style,caption=\lrit{fragment shader to use texture}]
-glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)width/(float)height, 0.1f, 100.0f);
+glm::mat4 proj = glm::perspective(
+    glm::radians(45.0f),
+    (float)width/(float)height,
+    0.1f, 100.0f);
         \end{lstlisting}
     \end{LTR}
     \normalsize
     \vspace*{0.3cm}
-    
+
     آرگومان اول مقددار \lr{fov (field of view)} است، این مقدار به نحوی مقدار بزرگنمایی تصویر ما را مشخص می کند، آرگومان دوم \lr{aspect ratio} دوربین و مقادیر سوم و چهارم به ترتیب فاصبه صفحه نزدیک و دور را مشخص می کنند، این مشخصات تشکیل یه فضای سه بعدی می دهند که هر چه خارج از آن باشد قابل مشاهده نیست، همچنین دید \lr{perspective} را به ما ارائه می کنند.
     شکل زیر بیانگر این موضوع است:
-    
+
 \begin{figure}[ht]
     \centering
     \href{https://learnopengl.com}{
@@ -734,7 +737,75 @@ glm::mat4 proj = glm::perspective(glm::radians(45.0f), (float)width/(float)heigh
     \caption{\lr{perspective frustum}}
     \label{fig:my_label}
 \end{figure}
+
+    حالا که سه ماتریس \lr{model}, \lr{view} و \lr{projection} را در اختیار داریم می توانیم با ضرب کردن مقدار lr{x, y, z, 1} برای هر نقطه آن نقطه را به \lr{clip space} ببریم، به ترتیب با ضرب کردن هر یک از ماتریس هایی که پیش تر گفت شد به \lr{world space} سپس \lr{view space} و در آخر به \lr{clip space} می رویم، همچنین \lr{projection matrix} در نهایت تمامی مقادیر را به \lr{NDC} نیز منتقل می کند.\par
+    مقدار تمامی ماتریس های بالا را با استفاده از متغیر های \lr{uniform} به \lr{vertex shader} انتفال می دهیم، مقادیری از این سه ماتریس را که نیاز باشد در هر اجرا از \lr{render loop} دوباره بارگزاری می کنیم.\lr{vertex shader} به شکل زیر در می آید:
+    \newpage
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{going 3D}]
+#version 330 core
+layout (location = 0) in vec3 aPos;
+...
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+void main()
+{
+    // note that we read the multiplication from right to left
+    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    ...
+}
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
     
+    به صورت پیش فرض \lr{opengl} نمی تواند مشخص کند که کدام قسمت از مدل هایی که رندر کرده در تصویر نهایی جلوتر یا عقب تر باید باشند، یعنی امکان دارد قسمت پشتی مکعب به جای قسمت جلوی آن رندر شود، در واقع هر کدام از \lr{fragment} ها که دیر تر رندر شوند، بر دیگر \lr{fragment} هایی که در آن پیکسل از قبل رندر شده اند پیروز می شوند و نمایش داده می شوند، برای حل این مشکل از \lr{z-buffer} استفاده می کنیم، \lr{GLFW} به صورت پیش فرض این \lr{buffer} را برای ما ساخته، برای فعال سازی آن دستور زیر را پیش از \lr{render loop} قرار می دهیم:
+    
+    \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{enabling depth buffer}]
+glEnable(GL_DEPTH_TEST);
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    \newpage
+    و در انتهای \lr{render loop} نیز دستور زیر را قرار می دهیم:
+    
+        \begin{LTR}
+    \small
+        \begin{lstlisting}[style=C++Style,caption=\lrit{clearing depth buffer for next frame}]
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        \end{lstlisting}
+    \end{LTR}
+    \normalsize
+    \vspace*{0.3cm}
+    
+    خروجی به شکل زیر خواهد بود:
+    \begin{figure}[ht]
+    \centering
+    \href{https://github.com/devprofile98/shm}{
+        \includegraphics[width=13cm]{images/3d.png}
+    }
+    \caption{\lr{cubes in 3D}}
+    \label{fig:my_label}
+\end{figure}
+% end of section ---------------------
+
+% new section ------------------------
+\newpage
+\addcontentsline{toc}{section}{نورپردازی و سایه ها}
+\section*{\huge{نورپردازی و سایه ها}}
+\vspace*{0.6cm}
+\subsection*{\lr{Lights}}
+\noindent
+\normalsize
+
+
 \part{فیزیک}
 \begin{center}
     \chapter{\lr{Physics}}
