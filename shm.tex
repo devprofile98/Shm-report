@@ -104,8 +104,8 @@
       تابستان 1400
     \end{center}
 
-\end{titlepage}    
-     
+\end{titlepage}
+
 
 % end title page -----------------
 \huge\textbf{چکیده}
@@ -114,7 +114,8 @@
   همزمان با پیدایش کامپیوتر ها، تلاش ها برای بهره بردن از توان آنها برای ابزار های \lr{Visualize} و دیگر ابزار ها برای
   استفاده از این قابلیت در زمینه های نظامی، فیلم و انیمیشن، شبیه سازی و بازی سازی شروع شد، این ابزار ها یا به صورت
   اختصاصی برای استفاده در صنایع خاص طراحی می شوند یا به صورت عمومی تر برای کاربرد های وسیع تری طراحی و توسعه می یابند.
-   طراحی و پیاده سازی موتور های گرافیکی به صورت کلی دارای پایه ها و دانشی یکسان از نحوه کار پردازنده ها و ریاضیات است.
+   طراحی و پیاده سازی موتور های گرافیکی به صورت کلی دارای پایه ها و دانشی یکسان از نحوه کار پردازنده ها و ریاضیات است.\par
+   این گزارش حول محور ساخت یک \lr{real-time render engine} نوشته شده که سعی در ارائه خلاصه ای از نحوه ساختن این نرم افزار می باشد. \lr{render engine} ها پایه های اصلی تمامی شبیه ساز ها، ابزار های صنعتی، بازی های کامپیوتری و ابزارآلات مربوط به صنعت فیلم و انیمیشن می باشند که در دسته بندی های مختلفی ساخته می شوند، این پروژه مربوط به ساختن دسته بندی خاصی از این موتور ها یعنی دسته بندی\lr{real time} می شود که کاربرد زیادی در تمامی زمینه های بالا به خصوص صنعت بازی های رایانه ای دارد.
 
 \end{flushright}
 
@@ -974,11 +975,58 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     \label{fig:my_label}
 \end{figure}
 
-\part{فیزیک}
-\begin{center}
-    \chapter{\lr{Physics}}
-\end{center}
-\section{\lr{Particles}}
-\section{\lr{Rigid Bodies}}
+\newpage
+\addcontentsline{toc}{section}{کاربردها}
+\section*{\huge{کاربردها}}
+\vspace*{0.6cm}
+\noindent
+\normalsize
+
+    \lr{Rendering} به پروسه تولید یک تصویر از داده ای سه بعدی گفته می شود، \lr{real time rendering} اشاره به تولید متناوب تصاویر بر اساس حرکت دوربین یا داده های سه بعدی دارد.
+    این گونه از \lr{Renderer} ها در تمامی صنایعی که نیاز به تولید تصاویر سه بعدی و هر گونه شبیه سازی داشته باشند به دلیل هزینه پایین تر برای ساختن هر \lr{frame} مورد استفاده قرار می گیرند.\par
+     برای مثال گوشه ای از کاربرد های این نرم افزار ها را در موتور \lr{Eevee} می بینیم. \lr{Eevee} موتور رندر سه بعدی \lr{realtime} استفاده شده در نرم افزار \lr{blender} است، \lr{Eevee} به منظور افزایش سرعت در زمان توسعه و گاها در محصولات تجاری عرضه شده است.
+    در زمان کار با \lr{blender} و در صحنه های بزرگ و شلوغ با استفاده از \lr{Eevee} می توانیم با سرعت بالا دسترسی به اکثر جزئیات و ویژگی های صحنه خود داشته باشیم، اینکار بدون استفاده از  یک \lr{real time renderer} مانند \lr{Eevee} پروسه ای بسیار زمان بر و شامل آزمون و خطاهای زیادی می باشد که هزینه هایی زیادی از نظر مالی و نیروی انسانی به جای می گذارد، \lr{Eevee} به صورت ماژولار و منطبق با قرارداد های \lr{Blener} ساخته شده. همچنین \lr{Eevee}  از \lr{openGL} و تکنیک های \lr{render}  استفاده شده در صنعت بازی سازی موفقیت های زیادی کسب کرد.\par
+    موتوری که من در این پروژه توسعه دادم از لحاظ نرم افزاری در دسته بندی نرم افزار هایی مانند \lr{Eevee} قرار می گیرد، \lr{shm} مانند \lr{Eevee} تمرکز بر تولید سریع و شبیه سازی مطابق با واقیت تصاویر دارد، اجزا زیادی مانند:
+    \begin{persian}
+    \begin{enumerate}
+      \item ارائه دو مدل دوربین \lr{perspective}  و \lr{ortho}
+      \item ارائه سه نوع کلی از \lr{light caster} مانند \lr{point}, \lr{directional or sun} و \lr{spot}
+      \item تولید \lr{light effect} ها مانند \lr{highlight} و \lr{shadow}
+      \item \lr{component} هایی برای کنترل تصاویر، \lr{textures} و \lr{gpu buffer} ها
+      \item  کنترل خودکار و دستی \lr{uniform buffer objects}
+      \item ارائه کلاس \lr{Model} برای \lr{load} کردن مدل های سه بعدی و مدیریت کردن \lr{material}, \lr{ambient and specular texture maps} و ویژگی های آن ها
+      \item ارائه کلاس ها برای \lr{load} و \lr{compile} کردن \lr{shader} ها
+      \item و کلاس های عمومی تر برای بیان کردن رنگ ها و ساختار های ریاضی مانند \lr{vector} های سه و چهار بعدی، \lr{Matrix} های سه در سه و چهار در چهار, \lr{Quaternion}
+      \item ...
+    \end{enumerate}
+\end{persian}
+
+    توسط \lr{shm} ارائه می شود.\par
+    
+    \newpage
+    این پروژه قابل استفاده برای \lr{3D scene viewer} ها مانند \lr{Microsoft 3D viewer} است:
+\begin{figure}[H]
+    \centering
+    \href{https://github.com/devprofile98/shm}{
+        \includegraphics[width=13cm]{images/archerym3d.png}
+    }
+    \caption{\lr{model in microsoft 3d viewer}}
+    \label{fig:my_label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \href{https://github.com/devprofile98/shm}{
+        \includegraphics[width=13cm]{images/archerys3d.png}
+    }
+    \caption{\lr{model in my project wit a green point light and ground}}
+    \label{fig:my_label}
+\end{figure}
+
+    % --- GUI usecases
+    % --- GAMES
+    % PHYSIC SIMULATOR
+    % EDUCATIONAL USECASES
+
 
 \end{document} 
