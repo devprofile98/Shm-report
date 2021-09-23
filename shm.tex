@@ -10,6 +10,8 @@
 \usepackage{amsmath}
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage{ragged2e}
+\usepackage{fancyhdr}
 \usepackage{xepersian}
 
 \captionsetup[figure]{font=small}
@@ -33,8 +35,8 @@
 \newcommand{\lrit}[1]{\lr{\textit{#1}}}
 
 
-\settextfont{B Yekan}
-\setlatintextfont[Scale=1.2]{Times New Roman}
+\settextfont{B Zar}
+\setlatintextfont[Scale=1]{Times New Roman}
 \DefaultMathsDigits
 
 % -- define code style
@@ -78,12 +80,19 @@
 \author{احمد منصوری و \lr{\textsf{\textbf{peter shirley}}}}
 \date{\lr{December 21, 2009}}
 
-
+\pagestyle{fancy}
+\fancyhf{}
+\cfoot{\thepage}
 
 \begin{document}
 %\maketitle
 \let\cleardoublepage\clearpage
 % title page ---------------------
+
+\justifying
+\thispagestyle{empty}
+\mbox{}
+
 
 \begin{titlepage}
 \begin{figure}[H]
@@ -111,6 +120,7 @@
 \huge\textbf{چکیده}
 \normalsize
 \begin{flushright}
+\justifying
   همزمان با پیدایش کامپیوتر ها، تلاش ها برای بهره بردن از توان آنها برای ابزار های \lr{Visualize} و دیگر ابزار ها برای
   استفاده از این قابلیت در زمینه های نظامی، فیلم و انیمیشن، شبیه سازی و بازی سازی شروع شد، این ابزار ها یا به صورت
   اختصاصی برای استفاده در صنایع خاص طراحی می شوند یا به صورت عمومی تر برای کاربرد های وسیع تری طراحی و توسعه می یابند.
@@ -124,6 +134,7 @@
 \begingroup
   \hypersetup{hidelinks}
   \tableofcontents
+  \listoffigures
 \endgroup
 
 \makeatletter
@@ -144,25 +155,23 @@
     مقدمه \\
 
 \vspace*{2cm}
-\noindent
 \normalsize
      در بخش اول به معرفی و توضیح قسمت های مربوط به \textbf{تصویر} در پروژه می پردازم،
      این قسمت از موتور مسئولیت دریافت مدل های سه بعدی و اطلاعات مربوطه(\lr{\textbf{Textures}, \textbf{Normals}, \textbf{geometry}, ...})
      و نمایش آن ها در صفحه را برعهده دارد، در این قسمت ما با استفاده از ریاضیات مدل ها را در فضای سه بعدی شبیه سازی می کنیم.\par
      تمامی ابزار های استفاده شده در این  قسمت، در طول فصول و متناسب با بخشی که از آن ها استفاده شده معرفی می شوند.\par
      هر فصل در این بخش مستقیما مربوط به یکی از قسمت های موتور در بخش گرافیک است، ابتدای هر فصل فایل های مربوطه به آن فصل ذکر خواهند شد.\par
-     همچنین از طریق این \href{https://github.com/devprofile98/shm}{\textbf{لینک}} 
+     همچنین از طریق این \href{https://github.com/devprofile98/shm}{\textbf{لینک}}
      به مخزن پروژه دسترسی خواهید داشت.
 
 \chapter{\lr{Renderer}}
 \newpage
 
-\addcontentsline{toc}{section}{پنجره ها و کانتکست ها}
-\section*{\huge{پنجره ها و کانتکست ها}}
+%\addcontentsline{toc}{section}{پنجره ها و کانتکست ها}
+\section{\huge{پنجره ها و کانتکست ها}}
 \vspace*{0.6cm}
 
-\subsection*{\lr{openGL}}
-\noindent
+\subsection{\lr{openGL}}
 \normalsize
     \lrboldit{OpenGL} یک \lrboldit{api} چند زبانه و کراس پلتفرم است که برای به تصویر کشیدن تصاویر دو بعدی و سه بعدی با استفاده از بردار ها
     اسفاده می شود، معمولا از \lrboldit{OpenGL} برای برقراری ارتباط با واحد پردازش گرافیکی \lrboldit{GPU} و بهره بردن از سرعت سخت افزار مخصوص برای رندر استفاده می شود.\par
@@ -178,7 +187,7 @@
 
 
 \newpage
-\subsection*{\lr{GLFW}}
+\subsection{\lr{GLFW}}
 \noindent
 \normalsize
     یک کتابخانه برای ساختن \lrit{window} و \lrit{context} ها برای \lrit{openGL, openGL ES, Vulkan} است، این کتابخانه به زبان \lrbold{C} نوشته شده و \lrit{binding} های مختلف آن به زبان های مختلف موجود است، این کتابخانه همچنین توانایی کنترل کردن ورودی های مختلف مثل \lrit{keyboard, mouse, joystick} را داراست، ما برای استفاده از \lrit{openGL} نیاز به این کتابخانه یا مشابه آن داریم زیرا \lr{openGL} هیچگونه قابلیت پیشفرضی برای مدیریت \lr{window} یا \lr{context} ها یا مدیریت \lr{input} ندارد. همچنین \lr{GLFW} یک کتابخانه چندسکویی است و می توانیم آن را در سیستم عامل های مختلف استفاده کنیم، پروژه من نیز چندسکویی است، پس می توانیم از این کتابخانه سبک و چندسکویی استفاده کنیم.
@@ -196,7 +205,7 @@
 \end{figure}
 
 \newpage
-\subsection*{\lr{GLAD}}
+\subsection{\lr{GLAD}}
 \noindent
 \normalsize
     کتابخانه ای برای \lrit{load} کردن \lr{pointer} ها به توابع \lr{opengl} در هنگام \lr{runtime}.
@@ -226,11 +235,11 @@ if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 % --------------------------------------------------------
 
 
-\addcontentsline{toc}{section}{تصویر کردن داده ها}
-\section*{\huge{تصویر کردن داده ها}}
+%\addcontentsline{toc}{section}{تصویر کردن داده ها}
+\section{\huge{تصویر کردن داده ها}}
 \vspace*{0.6cm}
 
-\subsection*{\lr{Vertex Data}}
+\subsection{\lr{Vertex Data}}
 \noindent
 \normalsize
     برای \lrit{render} کردن تصاویر نیاز به اطلاعاتی داریم، با مثلث شروع می کنیم، مثلث در گرافیک کامپیوتری جایگاه ویژه ای دارد، مثلث ساده ترین شکلی است که تشکیل سطح میدهد، برای رسم کردن یک مثلث در صفحه نیاز به سه نقطه داریم، با متصل کردن این سه نقطه به یکدیگر مثلث ساخته می شود، برای رسم مثلث در \lr{opengl} نیز شرابط به همین شکل است، ما نیاز به سه نقطه داریم، تفاوت این نقاط با نقطه های روی صفحه در ابعاد آن است، تقاط روی صفحه دوبعدی بودند، \lr{opengl} نقاط را به صورت سه بعدی دریافت می کند، هر کدام از این نقاط متشکل از سه مقدار برای \lrit{x, y,z} هستند، این نقاط را می توان به صورت بردار هایی در \lrit{Normalized Device Coordinates} نمایش داد، یک بردار در \lr{NDC} را به شکل رو به رو نمایش می دهیم: \\*
@@ -264,7 +273,7 @@ float vertices[] = {
 
 
 \newpage
-\subsection*{\lr{Shaders}}
+\subsection{\lr{Shaders}}
 \noindent
 \normalsize
     کارت های گرافیک امروزی، تشکیل شده از تعداد بسیار زیادی از هسته های پردازشی هستند که وظیفه اجرای برنامه های کوچکی به نام \lrit{Shader} ها را بر عهده دارند.\\*
@@ -362,7 +371,7 @@ glLinkProgram(shaderProgram); // link the program
     حالا می توانیم از این \lr{shader program} برای تصویر کردن داده ها استفاده کنیم، در بخش بعد داده ها را بر روی \lr{Gpu} بارگزاری می کنیم.
 
 \newpage
-\subsection*{\lr{Upload Data to GPU}}
+\subsection{\lr{Upload Data to GPU}}
 \noindent
 \normalsize
     برای استفاده از مشخصات نقاطی که تعریف کردیم باید آن هارا روی \lr{memory} کارت گرافیک آپلود کنیم، انتقال اطلاعات بین \lr{cpu} و \lr{gpu} نسبتا کند است، پس سعی می کنیم اطلاعات هر چه بیشتری را در یک بار انتفال منتقل کنیم، برای مدیریت حافظه بر روی کارت گرافیک از \lr{vbo(vertex buffer object)} استفاده می کنیم، این بافر ها قابلیت نگهداری تعداد زیادی از داده ها را داند، برای ساختن یک \lr{buffer} در \lr{opengl} و نگهداری مشخصه بافر ایجاد شده به صورت زیر عمل می کنیم:
@@ -470,7 +479,7 @@ glEnableVertexAttribArray(0);
     حالا می توانیم با استفاده \lr{shader program} و \lr{vao} مثلث را بر روی صفحه رسم کنیم، این کار را در بخش بعدی انجام می دهیم.
 
 \newpage
-\subsection*{\lr{Render Loop}}
+\subsection{\lr{Render Loop}}
 \noindent
 \normalsize
     حالا برای رسم کردن مثلث نیاز به کدهای زیر داریم:
@@ -585,7 +594,7 @@ glEnableVertexAttribArray(1);
     این روش برای مدل ها و اشیاء سه بعدی نه تنها کاربردی نیست بلکه هزینه زیادی دارد، روش بهتر برای مقدار دهی به رنگ و ایجاد جزئیات برای اشیاء استفاده از \lr{texture} ها است، در بخش بعد درباره تکسچرها توضیح می دهم.
 
 \newpage
-\subsection*{\lr{Textures}}
+\subsection{\lr{Textures}}
 \noindent
 \normalsize
     تصور کنید می خواهیم یک دیوار را شبیه سازی کنیم، دیوار را می توانیم با چهار نقطه با استفاده از \lr{EBO( element buffer object)} بسازیم، این چهار نقطه برای ما تشکیل یک مربع یا مستطیل(دو مثلث که از وتر بر روی یکدیگر قرار گرفته اند) بسته به موقعیت نقاط می دهند. مرحله بعدی اضافه کردن جزئیات رنگ یعنی شکل آجر ها بر روی دیوار است، این کار به سادگی امکان پذیر نیست، زیرا ما فقط قابلیت تعیین چهار رنگ برای چهار نقطه را داریم، پس نمی توانیم با چهار رنگ و \lr{linear interpolation} که \lr{opengl} بین این رنگ ها انجام می دهد یک دیوار آجری رندر کنیم، راه حل این مشکل استفاده از یک \lr{texture} است، به صورت ساده می توانیم عکس یک دیوار آجری را به \lr{opengl} بدهیم و بخواهیم که به ازای هر \lr{fragment} از یکی از \lr{pixel} های عکسی که ما به عنوان \lr{texture} آپلود کرده ایم استفاده کند. برای استفاده از یک \lr{texture} ما باید مراحل زیر را انجام دهیم.
@@ -713,10 +722,10 @@ void main()
 
 % section start --------------------
 \vspace*{6.0cm}
-\addcontentsline{toc}{section}{دوربین و حرکت در جهان}
-\section*{\huge{دوربین و حرکت در جهان}}
+%\addcontentsline{toc}{section}{دوربین و حرکت در جهان}
+\section{\huge{دوربین و حرکت در جهان}}
 \vspace*{0.6cm}
-\subsection*{\lr{Transformations}}
+\subsection{\lr{Transformations}}
 \noindent
 \normalsize
 
@@ -741,7 +750,7 @@ void main()
     پس از ضرب کردن \lr{model} در مختصات هر نقطه از شکل خود، اصطلاحا مختصات نقاط را در \lr{local space} به \lr{world space} برده ایم.\par
     برای انجام عملیات ریاضی مربوط به \lr{opengl} بر روی \lr{cpu} از کتابخانه \lrbold{GLM} استفاده می کنیم، این کتابخانه دارای کلاس ها و توابعی است که نمایانگر ساختار های ریاضیاتی مانند \lr{vector} ها و \lr{matrix} ها است، همچنین تعداد دیگری از توابع را داراست که برای ساده سازی کار ما فراهم شده اند، یکی از این توابع \lr{glm::LookAt} است، می  توانیم از این کلاس برای تشکیل یک \lr{view matrix} استفاده کنیم که نشانگر \lrbold{Camera} است.\par
     \vspace*{0.6cm}
-    \subsubsection*{\lr{Camera}}
+    \subsubsection{\lr{Camera}}
     \vspace*{0.3cm}
 
     در دنیای واقعی اگر جسمی از ما فاصله بیشتری داشته باشد کوچکتر دیده می شود، این تعریف بسیار ساده و مختصری از \lr{perspective view} است، نور بازتاب شده از اجسام به مرکز چشم ما برمیگردد و اجسامی که نزدیک تر هستند بزرگتر دیده می شوند، در مقابل این مدل \lr{orthographic views} قرار دارند، در این مدل که در طراحی های صنعتی بیشتر کاربر دارد و در دنیای واقعی وجود ندارد، هر کدام از \lr{pixel} های صفحه پرتویی به صورت جداگانه از خود ساطع می کنند، همه این پرتوها موازی هستند و در نتیجه فاصله جسم از بیننده در نحوه دیدن شکل تاثیری ایجاد نمی کند، ما برای داشتن یک فضای سه بعدی واقع گرایانه از \lr{perspective projection} استفاده می کنیم، برای ساختن این ماتریس از \lr{GLM} به شکل زیر استفاده می کنیم:
@@ -830,28 +839,28 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 % new section ------------------------
 \newpage
-\addcontentsline{toc}{section}{نورپردازی و سایه ها}
-\section*{\huge{نورپردازی و سایه ها}}
+%\addcontentsline{toc}{section}{نورپردازی و سایه ها}
+\section{\huge{نورپردازی و سایه ها}}
 \vspace*{0.6cm}
 \noindent
 \normalsize
 
     به صورت کلی در این پروژه سه مدل \lr{light caster}پیاده سازی شده است که  نور های\lr{Directional}, \lr{point} و \lr{spot} می باشند.
-\subsection*{\lr{Directional Lights}}
+\subsection{\lr{Directional Lights}}
     به صورت ساده این گونه از نور را مشابه به نوری در نظر می گیریم که منبع آن در بی نهایت قرار دارد، این فرض باعث می شود که تمامی پرتو های آن تقریبا با هم موازی باشند، خورشید را به همین صورت یک \lr{directional light} در نظر می گیریم. برای بیان کردن این مدل از نور تنها نیاز به سه مولفه
     $(x, y, z)$
     داریم تا بتوانیم یک جهت را در فضای سه بعدی مشخص کنیم که همان جهت پرتو های نور می باشد.\par
     انواع دیگر نور به این شکل ساده نیستند و از ویژگی های دیگری نیز برخوردارند، برای مثال \lr{point light} دارای یک مولفه سه بعدی \lr{position} است، همچنین برای این که \lr{attenuation} یا میرایی نور را شبیه سازی کنیم از سه مقدار دیگر به عنوان \lr{constant}, \lr{linear} و \lr{quadratic} نیز استفاده می کنیم تا بتوانیم تقریبا میرایی نور به نسبت فاصله از منبع نور را شبیه سازی کنیم. به همین صورت مقادیر دیگری از جمله \lr{direction} را نیز داراست تا به کمک \lr{cut off} بتواند یک نور که میرایی دارد و در جهت و زاویه خاصی در حال تابیدن است شبیه سازی کند.
 
-\subsection*{\lr{Lighting models}}
+\subsection{\lr{Lighting models}}
     پیاده سازی و شبیه سازی رفتار واقعی نور کاری بسیار پیچیده است که قدرت سخت افزاری و هزینه زیادی را در بردارد، برای همین ما از روش هایی استفاده می کنیم که به صورت تقریبی بتوانند رفتار نور را به صورتی که ما از فیزیک می دانیم شبیه سازی کنند، برای شبیه سازی رفتار نور و برخورد آن با محیط از روش هایی مانند \lr{lambertian} و \lr{blinn-phong} استفاده می شود.
 
-    \subsubsection*{\lr{Lambertian}}
+    \subsubsection{\lr{Lambertian}}
         این روش بر اساس زاویه تابش نور با سطح جسم عمل می کند، بدینگونه که اگر سطح عمود به جهت نور باشد تقریبا تمام انرژی نور را دریافت می کند، اگر سطح به صورت موازی با جهت نور قرار داشته باشد مقدار انرژی دریافتی از منبع نور برابر صفر خواهد بود، بقیه حالات قرارگیری این دو نسبت به بسته به
         $\cos \theta$
         مقدار دهی می شود. این روش مستقل از مکان تماشاگر است، در دنیای واقعی معمولا بسته به \lr{material} استفاده شده در جشم امکان بازتاب و بازتاب بیشتر نور از سطح در زاویه های به خصوصی وجود دارد، روش \lr{phong} و بعد تر \lr{blinn} این ویژگی را در خود جای دادند.
 
-    \subsubsection*{\lr{Blinn-Phong}}
+    \subsubsection{\lr{Blinn-Phong}}
         این مدل متشکل از سه بخش اصلی است:\par
     \lrbold{ambient}:
     همانطور که در مدل \lr{lambertian} دیدیم، اگر بردار نرمال سطحی عمود بر جهت نور باشد، آن سطح هیچ مقداری از نور را دریافت نمی کند و کاملا تاریک خواهد ماند، این حالت در جهان واقعی نیز در مکان های کاملا بسته اتفاق می افتد و در دیگر حالات مقدار کمی نور از منابع مختلف باعث دیده شدن جسم می شوند، ما در این مدل مقداری از رنگ هر جسم را بدون توجه به زاویه تابش نور به آن جسم می دهیم، این باعث می شود که اجسام کاملا تاریک به وجود نیایند، به این مقدار \lr{ambient color} می گوییم.\par
@@ -920,7 +929,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
 
 \newpage
 
-\subsection*{\lr{Shadows}}
+\subsection{\lr{Shadows}}
     الگوریتم های زیادی برای تولید سایه وجود دارند، برخی از این الگوریتم ها مناسب \lr{real-time} نیستند و به همین دلیل مورد بحث ما نیستند، این الگوریتم ها غالبا از روش های \lr{ray-tracing} سرچشمه می گیرند، در الگوریتم های \lr{ray-tracing} به صورت خودکار سایه ها تولید می شوند، دلیل آن نیز نرسیدن پرتو های نور به نقاط است.\par
     روش هایی که برای تولید سایه در \lr{real-time} استفاده می کنیم شباهت زیادی از لحاظ تعریف به روش بالا دارند، باید سطوحی را پیدا کنیم که نور به آن ها نمی رسد، یکی از این روش ها \lr{shadow mapping} نام دارد، این روش و مشتقات آن در بازی کامپیوتری مورد استفاده قرار می گیرند. \lr{shadow mapping} روشی ساده است که در مراحلی که در زیر شرح می دهم قابل تولید است: اساس کار ایجاد نقشه ای است که با استفاده از آن می توانیم مشخص کنیم که نور به چه جسمی زودتر برخورد کرده و چه جسمی به نور نزدیک تر است
 
@@ -979,12 +988,12 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 \end{figure}
 
 \newpage
-\addcontentsline{toc}{section}{کاربردها}
-\section*{\huge{کاربردها}}
+%\addcontentsline{toc}{section}{کاربردها}
+\section{\huge{کاربردها}}
 \vspace*{0.6cm}
 \noindent
 \normalsize
-    \subsection*{\lr{Use Cases}}
+    \subsection{\lr{Use Cases}}
     \lr{Rendering} به پروسه تولید یک تصویر از داده ای سه بعدی گفته می شود، \lr{real time rendering} اشاره به تولید متناوب تصاویر بر اساس حرکت دوربین یا داده های سه بعدی دارد.
     این گونه از \lr{Renderer} ها در تمامی صنایعی که نیاز به تولید تصاویر سه بعدی و هر گونه شبیه سازی داشته باشند به دلیل هزینه پایین تر برای ساختن هر \lr{frame} مورد استفاده قرار می گیرند.\par
      برای مثال گوشه ای از کاربرد های این نرم افزار ها را در موتور \lr{Eevee} می بینیم. \lr{Eevee} موتور رندر سه بعدی \lr{realtime} استفاده شده در نرم افزار \lr{blender} است، \lr{Eevee} به منظور افزایش سرعت در زمان توسعه و گاها در محصولات تجاری عرضه شده است.
@@ -1007,7 +1016,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     توسط \lr{shm} ارائه می شود.\par
 
     \newpage
-    \subsection*{\lr{3D viewer}}
+    \subsection{\lr{3D viewer}}
     این پروژه قابل استفاده برای \lr{3D scene viewer} ها مانند \lr{Microsoft 3D viewer} است:
 \begin{figure}[H]
     \centering
@@ -1028,7 +1037,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 \end{figure}
 
     \newpage
-    \subsection*{\lr{Games}}
+    \subsection{\lr{Games}}
     یکی از کاربرد های \lr{real-time render engine} ها همانطور که گفته شد، در صنعت بازی سازی است، در ادامه بازی معروف \lr{Flappy bird} که یک بازی دو بعدی و \lr{Arcade} است را در با اشیاء سه بعدی بازسازی می کنیم، در این بازی باید پرنده را با فشار دادن درست و بجای \lr{space} از بین \lr{pipe} ها عبور دهیم:
 
 \begin{figure}[H]
