@@ -1,4 +1,4 @@
-\documentclass[a4paper, 12pt]{book}
+\documentclass[a4paper, 12pt]{report}
 
 \usepackage{graphicx}
 \usepackage{float}
@@ -12,6 +12,7 @@
 \usepackage{listings}
 \usepackage{ragged2e}
 \usepackage{fancyhdr}
+\usepackage{geometry}
 \usepackage{xepersian}
 
 \captionsetup[figure]{font=small}
@@ -31,8 +32,9 @@
 \renewcommand{\baselinestretch}{1.6}
 
 \newcommand{\lrbold}[1]{\lr{\textbf{#1}}}
-\newcommand{\lrboldit}[1]{\lr{\textbf{\textit{#1}}}}
+\newcommand{\lrboldit}[1]{\lr{\textit{#1}}}
 \newcommand{\lrit}[1]{\lr{\textit{#1}}}
+
 
 
 \settextfont{B Zar}
@@ -72,17 +74,25 @@
 {%
     \lstset{style=C++Style, #1}%
 }{}
-
+\newfontfamily\myfont{Nazanin Bold}
+\newfontfamily\titrfont{B Titr}
+\newfontfamily\mitrafont{Mitra}
+\newfontfamily\zarfont{B Zar}
+\newfontfamily\zarbold{Zar}
 
 % end code style defenition
 
-\title{ مقدمه ای بر گرافیک کامپیوتر}
-\author{احمد منصوری و \lr{\textsf{\textbf{peter shirley}}}}
-\date{\lr{December 21, 2009}}
+%\title{ مقدمه ای بر گرافیک کامپیوتر}
+%\author{احمد منصوری و \lr{\textsf{\textbf{peter shirley}}}}
+%\date{\lr{December 21, 2009}}
 
 \pagestyle{fancy}
 \fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
 \cfoot{\thepage}
+
+
+\geometry{right=4cm, left=2.5cm, top=4cm, bottom=2.5cm}
 
 \begin{document}
 %\maketitle
@@ -92,7 +102,13 @@
 \justifying
 \thispagestyle{empty}
 \mbox{}
-
+\newpage
+\thispagestyle{empty}
+  \vfill
+  \begin{center}
+      \includegraphics [width=9cm] {images/page2.jpg}
+  \end{center}
+  \vfill
 
 \begin{titlepage}
 \begin{figure}[H]
@@ -100,32 +116,33 @@
         \includegraphics[width=8cm]{images/logo.png}
 \end{figure}
 
-\vspace*{2cm}
+% \vspace*{1cm}
     \begin{center}
       \large
-      دانشکده فنی و مهندسی\par
-      پروژه کارشناسی رشته مهندسی کامپیوتر\par
-      \textbf{عنوان}:
-      پیاده سازی \lr{real-time 3D engine}\par
-      استاد راهنما: سرکار خانم دکتر قاسمیان\par
-      دانشجو: احمد منصوری بیدخوانی\par
+      {\fontsize{13}{1cm} \selectfont \myfont \textbf{دانشگاه شهید باهنر کرمان}\par}
+      {\fontsize{12}{1cm} \selectfont \myfont \textbf{دانشکده فنی و مهندسی}\par}
+      {\fontsize{18}{1cm} \selectfont \myfont \textbf{پروژه کارشناسی رشته مهندسی کامپیوتر}\par}
+      {\fontsize{18}{1cm} \selectfont \titrfont \textbf{عنوان}:
+      \titrfont \textbf{پیاده سازی \lr{real-time 3D engine}}\par}
+      {\fontsize{15}{1cm} \selectfont \myfont \textbf{استاد راهنما: سرکار خانم دکتر قاسمیان}\par}
+      {\fontsize{15}{1cm} \selectfont \myfont \textbf{دانشجو: احمد منصوری بیدخوانی}\par}
       \normalsize
-      تابستان 1400
+      {\fontsize{13}{1cm} \selectfont \myfont \textbf{تابستان 1400}}
     \end{center}
 
 \end{titlepage}
 
 
 % end title page -----------------
-\huge\textbf{چکیده}
+\fontsize{13}{1cm}\mitrafont\textbf{چکیده}
 \normalsize
 \begin{flushright}
 \justifying
-  همزمان با پیدایش کامپیوتر ها، تلاش ها برای بهره بردن از توان آنها برای ابزار های \lr{Visualize} و دیگر ابزار ها برای
-  استفاده از این قابلیت در زمینه های نظامی، فیلم و انیمیشن، شبیه سازی و بازی سازی شروع شد، این ابزار ها یا به صورت
-  اختصاصی برای استفاده در صنایع خاص طراحی می شوند یا به صورت عمومی تر برای کاربرد های وسیع تری طراحی و توسعه می یابند.
-   طراحی و پیاده سازی موتور های گرافیکی به صورت کلی دارای پایه ها و دانشی یکسان از نحوه کار پردازنده ها و ریاضیات است.\par
-   این گزارش حول محور ساخت یک \lr{real-time render engine} نوشته شده که سعی در ارائه خلاصه ای از نحوه ساختن این نرم افزار می باشد. \lr{render engine} ها پایه های اصلی تمامی شبیه ساز ها، ابزار های صنعتی، بازی های کامپیوتری و ابزارآلات مربوط به صنعت فیلم و انیمیشن می باشند که در دسته بندی های مختلفی ساخته می شوند، این پروژه مربوط به ساختن دسته بندی خاصی از این موتور ها یعنی دسته بندی\lr{real time} می شود که کاربرد زیادی در تمامی زمینه های بالا به خصوص صنعت بازی های رایانه ای دارد.
+\fontsize{13}{0.8cm}\mitrafont
+  همزمان با پیدایش کامپیوتر ها، تلاش ها برای بهره بردن از توان آنها برای ساخت ابزار های تصویر کردن\footnote{\lr{visualize}} داده هاو ابزار های مربوطه برای
+  استفاده از قدرت کامپیوتر در زمینه های نظامی، فیلم و انیمیشن، شبیه سازی و بازی سازی شروع شد.\par
+    طراحی و پیاده سازی موتور های رندر سه بعدی\footnote{\lr{3D render engine}} به صورت کلی دارای پایه ها و دانشی یکسان از نحوه کار پردازنده ها و ریاضیات است.\par
+    هدف این پروژه مطالعه و ساخت یک  موتور رندر سه بعدی بی درنگ\footnote{\lr{real-time render engine}} و بررسی تکنیک ها و روش های جایگزین برای استفاده در صنایه و پروژه های مختلف است. \lr{render engine} ها پایه های اصلی تمامی شبیه ساز ها، ابزار های صنعتی، بازی های کامپیوتری و ابزارآلات مربوط به صنعت فیلم و انیمیشن می باشند که در دسته بندی های مختلفی ساخته می شوند، این پروژه مربوط به ساختن دسته بندی خاصی از این موتور ها یعنی دسته بندی \lr{real time} می شود که کاربرد زیادی در تمامی زمینه های بالا به خصوص صنعت بازی های رایانه ای دارد.
    در انتهای این گزارش فصلی برای نمایش برخی از قابلیت های یک \lr{realtime render engine} اختصاص داده شده.
 
 \end{flushright}
@@ -148,13 +165,13 @@
                 \twocolumn
               \fi}
 \makeatother
-
-\part{گرافیک}
-
+\fontsize{13pt}{1cm}\zarfont
+% \part{گرافیک}
+\newpage
 \huge
     مقدمه \\
 
-\vspace*{2cm}
+% \vspace*{2cm}
 \normalsize
      در بخش اول به معرفی و توضیح قسمت های مربوط به \textbf{تصویر} در پروژه می پردازم،
      این قسمت از موتور مسئولیت دریافت مدل های سه بعدی و اطلاعات مربوطه(\lr{\textbf{Textures}, \textbf{Normals}, \textbf{geometry}, ...})
@@ -164,11 +181,11 @@
      همچنین از طریق این \href{https://github.com/devprofile98/shm}{\textbf{لینک}}
      به مخزن پروژه دسترسی خواهید داشت.
 
-\chapter{\lr{Renderer}}
+\chapter{\fontsize{18pt}{1.0cm}\zarbold\lrbold{Renderer}}
 \newpage
 
 %\addcontentsline{toc}{section}{پنجره ها و کانتکست ها}
-\section{\huge{پنجره ها و کانتکست ها}}
+\section{\fontsize{15pt}{1.0cm}\zarbold\textbf{پنجره ها و کانتکست ها}}
 \vspace*{0.6cm}
 
 \subsection{\lr{openGL}}
@@ -200,7 +217,7 @@
     \href{https://github.com/glfw}{
         \includegraphics[width=3cm]{GLFW.png}
     }
-    \caption{\lr{\textit{glfw logo}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{glfw logo}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -236,7 +253,7 @@ if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 
 
 %\addcontentsline{toc}{section}{تصویر کردن داده ها}
-\section{\huge{تصویر کردن داده ها}}
+\section{\fontsize{15pt}{1.0cm}\zarbold\textbf{تصویر کردن داده ها}}
 \vspace*{0.6cm}
 
 \subsection{\lr{Vertex Data}}
@@ -286,7 +303,7 @@ float vertices[] = {
     \href{https://learnopengl.com}{
         \includegraphics[width=12cm]{pipeline.png}
     }
-    \caption{\lr{Graphic pipeline: from learnopengl.com}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{Graphic pipeline: from learnopengl.com}}}
     \label{fig:my_label}
 \end{figure}
 \vspace*{0.6cm}
@@ -419,7 +436,7 @@ glBufferData(GL_ARRAY_BUFFER,
     \href{https://learnopengl.com}{
         \includegraphics[width=12cm]{images/shm-linking-vertex-attribute.png}
     }
-    \caption{\lr{vertex attribute linking}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{vertex attribute linking}}}
     \label{fig:my_label}
 \end{figure}
 \vspace*{0.6cm}
@@ -503,7 +520,7 @@ glDrawArrays(GL_TRIANGLES, 0, 3);
     \href{https://learnopengl.com}{
         \includegraphics[width=10cm]{images/hellotriangle.png}
     }
-    \caption{\lr{hello triangle}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{hello triangle}}}
     \label{fig:my_label}
 \end{figure}
 \vspace*{0.3cm}
@@ -586,7 +603,7 @@ glEnableVertexAttribArray(1);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=10cm]{images/colorfultriangle.png}
     }
-    \caption{\lr{colorful triangle}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{colorful triangle}}}
     \label{fig:my_label}
 \end{figure}
 \vspace*{0.3cm}
@@ -712,7 +729,7 @@ void main()
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=13cm]{images/texturedtriangle.png}
     }
-    \caption{\lr{textured triangle}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{textured triangle}}}
     \label{fig:my_label}
 \end{figure}
 \newpage
@@ -723,7 +740,7 @@ void main()
 % section start --------------------
 \vspace*{6.0cm}
 %\addcontentsline{toc}{section}{دوربین و حرکت در جهان}
-\section{\huge{دوربین و حرکت در جهان}}
+\section{\fontsize{15pt}{1.0cm}\zarbold\textbf{دوربین و حرکت در جهان}}
 \vspace*{0.6cm}
 \subsection{\lr{Transformations}}
 \noindent
@@ -775,7 +792,7 @@ glm::mat4 proj = glm::perspective(
     \href{https://learnopengl.com}{
         \includegraphics[width=10cm]{images/perspective_frustum.png}
     }
-    \caption{\lr{perspective frustum}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{perspective frustum}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -832,7 +849,7 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=13cm]{images/3d.png}
     }
-    \caption{\lr{cubes in 3D}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{cubes in 3D}}}
     \label{fig:my_label}
 \end{figure}
 % end of section ---------------------
@@ -840,7 +857,7 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 % new section ------------------------
 \newpage
 %\addcontentsline{toc}{section}{نورپردازی و سایه ها}
-\section{\huge{نورپردازی و سایه ها}}
+\section{\fontsize{15pt}{1.0cm}\zarbold\textbf{نورپردازی و سایه ها}}
 \vspace*{0.6cm}
 \noindent
 \normalsize
@@ -892,7 +909,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=11cm]{images/phong1.png}
     }
-    \caption{\lr{blinn-phong shading}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{blinn-phong shading}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -901,7 +918,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=11cm]{images/phong2.png}
     }
-    \caption{\lr{blinn-phong shading}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{blinn-phong shading}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -914,7 +931,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=15cm]{images/specular-gun.png}
     }
-    \caption{\lr{phong shaded gun}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{phong shaded gun}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -923,7 +940,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=9cm]{images/handgun-S.jpg}
     }
-    \caption{\lr{a gun specular map}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{a gun specular map}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -938,7 +955,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=11cm]{images/shadow.png}
     }
-    \caption{\lr{absence of light - shadow}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{absence of light - shadow}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -983,13 +1000,13 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=13cm]{images/sceme-shadow.png}
     }
-    \caption{\lr{scene with shadow}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{scene with shadow}}}
     \label{fig:my_label}
 \end{figure}
 
 \newpage
 %\addcontentsline{toc}{section}{کاربردها}
-\section{\huge{کاربردها}}
+\section{\fontsize{15pt}{1.0cm}\zarbold\textbf{کاربردها}}
 \vspace*{0.6cm}
 \noindent
 \normalsize
@@ -1023,7 +1040,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=13cm]{images/archerym3d.png}
     }
-    \caption{\lr{model in microsoft 3d viewer}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{model in microsoft 3d viewer}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -1032,7 +1049,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=13cm]{images/archerys3d.png}
     }
-    \caption{\lr{model in my project wit a green point light and ground}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{model in my project wit a green point light and ground}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -1045,7 +1062,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     \href{https://flappybird.io/}{
         \includegraphics[width=13cm]{images/op-flappybird.png}
     }
-    \caption{\lr{original flappy bird}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{original flappy bird}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -1117,7 +1134,7 @@ GET_MODEL(0)->DrawInstances(pipes_pos, nullptr);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=14cm]{images/flappybird.png}
     }
-    \caption{\lr{my project flappy bird}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{my project flappy bird}}}
     \label{fig:my_label}
 \end{figure}
     برای دانلود بازی می توانید از این \href{https://github.com/devprofile98/shm/releases/tag/v0.1-alpha}{لینک} استفاده کنید، همچنین برای دیدن فیلم اجرای بازی می توانید از این \href{https://youtu.be/JqjluAjQV84}{لینک} استفاده کنید.
