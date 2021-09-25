@@ -7,6 +7,12 @@
 \usepackage[font=small,labelfont=bf]{caption}
 \usepackage{index}
 \usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,
+    urlcolor=blue,
+    }
 \usepackage{amsmath}
 \usepackage{xcolor}
 \usepackage{listings}
@@ -784,7 +790,7 @@ glm::mat4 proj = glm::perspective(
     \vspace*{0.3cm}
 
     آرگومان اول مقدار \lr{FOV}\footnote{\lr{field of view}} است، این مقدار به نحوی مقدار بزرگنمایی تصویر ما را مشخص می کند، آرگومان دوم نسبت ابعاد صفحه\footnote{\lr{aspect ratio}} است، مقادیر سوم و چهارم به ترتیب فاصله صفحه نزدیک و دور\footnote{\lr{Far/Near Plane}} را مشخص می کنند، این مشخصات تشکیل یه فضای سه بعدی برش داده شده\footnote{\lr{Clip Space}} را می دهند که هر چه خارج از آن باشد قابل مشاهده نیست، همچنین دید \lr{perspective} را به ما ارائه می کنند.
-    شکل \ref{fig:perspectiveview} بیانگر این موضوع است.
+    شکل زیر بیانگر این موضوع است.
 
 \begin{figure}[ht]
     \centering
@@ -792,7 +798,7 @@ glm::mat4 proj = glm::perspective(
         \includegraphics[width=10cm]{images/perspective_frustum.png}
     }
     \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{perspective frustum}}}
-    \label{\lr{fig:perspectiveview}}
+    \label{fig:perspectiveview}
 \end{figure}
 
     حالا که سه ماتریس \lr{model}, \lr{view} و \lr{projection} را در اختیار داریم می توانیم با ضرب کردن مقدار \lr{(x, y, z, 1)} به ازای هر نقطه، آن را به \lr{clip space} ببریم، به ترتیب با ضرب کردن هر یک از ماتریس هایی که پیش تر گفت شد به \lr{world space} سپس \lr{view space} و در آخر به \lr{clip space} می رویم، همچنین \lr{projection matrix} در نهایت تمامی مقادیر را به \lr{NDC} نیز منتقل می کند.\par
@@ -900,7 +906,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
 
     مقدار 32 در کد بالا را مقدار \lr{shininess} می گویند، هر چقدر این مقدار بیشتر باشد درخشش بازتاب در آن نقطه بیشتر می شود.\par
     در نهایت با جمع بستن این سه مقدار می توانیم تقریبی از رفتار نور در دنیای واقعی داشته باشیم، در این پروژه از روش \lr{blinn-phong} استفاده شده.
-    نتیجه استفاده از این روش به تصاویر صفحه بعد است.
+    نتیجه استفاده از این روش به صورت تصاویر صفحه بعد است.
 
 \begin{figure}[H]
     \centering
@@ -908,7 +914,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
         \includegraphics[width=11cm]{images/phong1.png}
     }
     \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{blinn-phong shading}}}
-    \label{\lr{fig:blin}}
+    \label{fig:blin}
 \end{figure}
 
 \begin{figure}[H]
@@ -1002,16 +1008,16 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
 \newpage
 %\addcontentsline{toc}{section}{کاربردها}
-\section{\fontsize{15pt}{1.0cm}\zarbold\textbf{کاربردها}}
+\section{\fontsize{15pt}{1.0cm}\zarbold\textbf{جمع بندی و نتیجه گیری}}
 \vspace*{0.6cm}
 \noindent
 \normalsize
     \subsection{\lr{Use Cases}}
-    \lr{Rendering} به پروسه تولید یک تصویر از داده ای سه بعدی گفته می شود، \lr{real time rendering} اشاره به تولید متناوب تصاویر بر اساس حرکت دوربین یا داده های سه بعدی دارد.
-    این گونه از \lr{Renderer} ها در تمامی صنایعی که نیاز به تولید تصاویر سه بعدی و هر گونه شبیه سازی داشته باشند به دلیل هزینه پایین تر برای ساختن هر \lr{frame} مورد استفاده قرار می گیرند.\par
+    در دنیای امروز، صنایعی که بر پایه گرافیک کامپیوتر شکل گرفته اند سهم عظیمی از گردش مالی، کارآفرینی و ساعات کار و اوقات فراغت تعداد زیادی از مردم را تشکیل می دهند، در این بین شرکت ها و موسسات بزرگ با روی آوردن به موتور های رندر بی درنگ در پی افزایش بازدهی و کاهش هزینه های خود هستند. به دنبال افزایش قدرت کارت های گرافیک، واقع گرایی هر چه بیشتر همچنان فرصت را برای استفاده از موتور های رندر با دقت بسیار بالا در مصارف بی درنگ را از صنایع و کمپانی های بزرگ گرفته است.\par
+    استفاده شرکت ها و نرم افزار های متن باز\footnote{\lr{Open Source}} سبب تمایل بیشتر کاربران به محصولات آن ها شده است. این مهم سبب علاقمندی هر چه بیشتر شرکت ها به موتور های رندر بلادرنگ با تکنولوژی های به روز تر شده است.
      برای مثال گوشه ای از کاربرد های این نرم افزار ها را در موتور \lr{Eevee} می بینیم. \lr{Eevee} موتور رندر سه بعدی \lr{realtime} استفاده شده در نرم افزار \lr{blender} است، \lr{Eevee} به منظور افزایش سرعت در زمان توسعه و گاها در محصولات تجاری عرضه شده است.
     در زمان کار با \lr{blender} و در صحنه های بزرگ و شلوغ با استفاده از \lr{Eevee} می توانیم با سرعت بالا دسترسی به اکثر جزئیات و ویژگی های صحنه خود داشته باشیم، اینکار بدون استفاده از  یک \lr{real time renderer} مانند \lr{Eevee} پروسه ای بسیار زمان بر و شامل آزمون و خطاهای زیادی می باشد که هزینه هایی زیادی از نظر مالی و نیروی انسانی به جای می گذارد، \lr{Eevee} به صورت ماژولار و منطبق با قرارداد های \lr{Blener} ساخته شده. همچنین  \lr{Eevee}  با استفاده از \lr{openGL} و تکنیک های \lr{render}  استفاده شده در صنعت بازی سازی موفقیت های زیادی کسب کرد.\par
-    موتوری که من در این پروژه توسعه دادم از لحاظ نرم افزاری در دسته بندی نرم افزار هایی مانند \lr{Eevee} قرار می گیرد، \lr{Shm} مانند \lr{Eevee} تمرکز بر تولید سریع و شبیه سازی مطابق با واقیت تصاویر دارد، اجزا زیادی مانند:
+    موتوری که در این پروژه توسعه دادم از لحاظ نرم افزاری در دسته بندی نرم افزار هایی مانند \lr{Eevee} قرار می گیرد، \lr{Shm} مانند \lr{Eevee} متمرکز بر تولید سریع و شبیه سازی مطابق با واقعیت\footnote{\lr{Photo realistic}} تصاویر است، اجزا زیادی مانند:
     \begin{persian}
     \begin{enumerate}
       \item ارائه دو مدل دوربین \lr{perspective}  و \lr{ortho}
@@ -1051,7 +1057,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 
     \newpage
     \subsection{\lr{Games}}
-    یکی از کاربرد های \lr{real-time render engine} ها همانطور که گفته شد، در صنعت بازی سازی است، در ادامه بازی معروف \lr{Flappy bird} که یک بازی دو بعدی و \lr{Arcade} است را در با اشیاء سه بعدی بازسازی می کنیم، در این بازی باید پرنده را با فشار دادن درست و بجای \lr{space} از بین \lr{pipe} ها عبور دهیم:
+    یکی از کاربرد های \lr{real-time render engine} ها همانطور که گفته شد، در صنعت بازی سازی است، در ادامه بازی معروف \lr{Flappy bird} که یک بازی دو بعدی و \lr{Arcade} است را در با اشیاء سه بعدی بازسازی می کنیم، در این بازی باید با فشردن درست \lr{space} پرنده را از بین \lr{pipe} ها عبور دهیم:
 
 \begin{figure}[H]
     \centering
@@ -1073,6 +1079,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     \end{LTR}
     \normalsize
     \vspace*{0.3cm}
+\newpage
 
     دو \lr{shader} متفاوت برای پرنده و لوله ها می سازیم:
 \begin{LTR}
