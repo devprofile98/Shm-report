@@ -101,6 +101,9 @@
 
 
 \geometry{right=4cm, left=2.5cm, top=4cm, bottom=2.5cm}
+\pagenumbering{alph}
+
+\def\lstlistingname{برنامه}
 
 \begin{document}
 %\maketitle
@@ -110,21 +113,25 @@
 \justifying
 \thispagestyle{empty}
 \mbox{}
+
 \newpage
 \thispagestyle{empty}
-  \vfill
-  \begin{center}
+  %\vfill
+    \vspace*{3cm}
+
+\begin{figure}[H]
+    \centering
       \includegraphics [width=9cm] {images/page2.jpg}
-  \end{center}
-  \vfill
+
+\end{figure}
+  %\vfill
 
 \begin{titlepage}
 \begin{figure}[H]
     \centering
-        \includegraphics[width=8cm]{images/logo.png}
+        \includegraphics[width=8cm]{images/logoEN.png}
 \end{figure}
 
-% \vspace*{1cm}
     \begin{center}
       \large
       {\fontsize{13}{1cm} \selectfont \myfont \textbf{دانشگاه شهید باهنر کرمان}\par}
@@ -134,8 +141,7 @@
       \titrfont \textbf{پیاده سازی \lr{Real-time Render Engine}}\par}
       {\fontsize{15}{1cm} \selectfont \myfont \textbf{استاد راهنما: سرکار خانم دکتر قاسمیان}\par}
       {\fontsize{15}{1cm} \selectfont \myfont \textbf{دانشجو: احمد منصوری بیدخوانی}\par}
-      \normalsize
-      {\fontsize{13}{1cm} \selectfont \myfont \textbf{تابستان 1400}}
+      {\fontsize{13}{1cm} \selectfont \myfont \textbf{تاریخ: 1400/6/28}}
     \end{center}
 
 \end{titlepage}
@@ -173,7 +179,7 @@
                 \twocolumn
               \fi}
 \makeatother
-
+\pagenumbering{arabic}
 \chapter{\fontsize{18pt}{1.0cm}\zarbold\lrbold{Renderer}}
 
 
@@ -224,7 +230,7 @@
     \href{https://github.com/glfw}{
         \includegraphics[width=3cm]{GLFW.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{glfw logo}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{لوگو \lr{GLFW}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -443,7 +449,7 @@ glBufferData(GL_ARRAY_BUFFER,
     \href{https://learnopengl.com}{
         \includegraphics[width=12cm]{images/shm-linking-vertex-attribute.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{vertex attribute linking}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{متصل کردن \lr{vertex attribute}}}
     \label{fig:my_label}
 \end{figure}
 \vspace*{0.6cm}
@@ -527,7 +533,7 @@ glDrawArrays(GL_TRIANGLES, 0, 3);
     \href{https://learnopengl.com}{
         \includegraphics[width=10cm]{images/hellotriangle.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{hello triangle}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{اولین مثلث}}
     \label{fig:my_label}
 \end{figure}
 \vspace*{0.3cm}
@@ -610,7 +616,7 @@ glEnableVertexAttribArray(1);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=10cm]{images/colorfultriangle.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{colorful triangle}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{رنگ ها و مثلث}}
     \label{fig:my_label}
 \end{figure}
 \vspace*{0.3cm}
@@ -734,7 +740,7 @@ void main()
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=13cm]{images/texturedtriangle.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{textured triangle}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{افزودن جزئیات به مثلث}}
     \label{fig:my_label}
 \end{figure}
 \newpage
@@ -797,7 +803,7 @@ glm::mat4 proj = glm::perspective(
     \href{https://learnopengl.com}{
         \includegraphics[width=10cm]{images/perspective_frustum.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{perspective frustum}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{شرح \lr{perspective frustum}}}
     \label{fig:perspectiveview}
 \end{figure}
 
@@ -853,7 +859,7 @@ glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=13cm]{images/3d.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{cubes in 3D}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{مکعب های سه بعدی}}
     \label{fig:my_label}
 \end{figure}
 % end of section ---------------------
@@ -913,7 +919,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=11cm]{images/phong1.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{blinn-phong shading}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{روش \lr{blinn-phong shading}}}
     \label{fig:blin}
 \end{figure}
 
@@ -922,7 +928,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=11cm]{images/phong2.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{blinn-phong shading}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{روش \lr{blinn-phong shading}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -932,7 +938,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=9cm]{images/handgun-S.jpg}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{a gun specular map}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{specular map} مربوط به یک اسلحه }}
     \label{fig:my_label}
 \end{figure}
       بعد از استفاده از این \lr{specular map} برای مدل اسلحه نتیجه به شکل زیر در می آید، می بینید که مقدار بازتاب در همه نقاط یکسان نیست:
@@ -942,7 +948,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=15cm]{images/specular-gun.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{phong shaded gun}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{استفاده از \lr{phong-shading}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -957,7 +963,7 @@ float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=11cm]{images/shadow.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{absence of light - shadow}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{سایه - غیاب نور}}
     \label{fig:my_label}
 \end{figure}
 
@@ -1002,7 +1008,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=13cm]{images/sceme-shadow.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{scene with shadow}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{یک صحنه به همراه سایه}}
     \label{fig:my_label}
 \end{figure}
 
@@ -1042,7 +1048,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=13cm]{images/archerym3d.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{model in microsoft 3d viewer}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{تماشای مدل ها در \lr{Microsoft 3D viewer}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -1051,7 +1057,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=13cm]{images/archerys3d.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{model in my project wit a green point light and ground}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{تماشای مدل در پروژه من}}
     \label{fig:my_label}
 \end{figure}
 
@@ -1064,7 +1070,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     \href{https://flappybird.io/}{
         \includegraphics[width=13cm]{images/op-flappybird.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{original flappy bird}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{نسخه اصلی \lr{Flappy Bird}}}
     \label{fig:my_label}
 \end{figure}
 
@@ -1137,9 +1143,61 @@ GET_MODEL(0)->DrawInstances(pipes_pos, nullptr);
     \href{https://github.com/devprofile98/shm}{
         \includegraphics[width=14cm]{images/flappybird.png}
     }
-    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{\lr{my project flappy bird}}}
+    \caption{\fontsize{11pt}{1.0cm}\zarbold\textbf{پیاده سازی\lr{Flappy Bird} به وسیله پروژه}}
     \label{fig:my_label}
 \end{figure}
     برای دانلود بازی می توانید از این \href{https://github.com/devprofile98/shm/releases/tag/v0.1-alpha}{لینک} استفاده کنید، همچنین برای دیدن فیلم اجرای بازی می توانید از این \href{https://youtu.be/JqjluAjQV84}{لینک} استفاده کنید.
+    
+% end of report
+\newpage
+% start of references
+\subsection{منابع و مآخذ}
+
+\begin{latin}
+    - Peter shirley and S. Marschner, "Fundamentals of Computer Graphics", Third Edition, May 2009\\
+    - Ian Millington, "Game Physics Engine Development", 2007\\
+    - Joey de Vries, "Learn OpenGL, Graphics Programming", First Edition, 2020\\
+    - unknown writer "opengl-tutorial", (available on \hyperlink{http://www.opengl-tutorial.org/}{http://www.opengl-tutorial.org} visited at 2021)\\
+    - The Cherno "Welcome To OpenGL", (available on \hyperlink{https://youtu.be/W3gAzLwfIP0}{https://youtu.be/W3gAzLwfIP0} visited at 2020)
+\end{latin}
+% end of references
+% start of English abstract
+\newpage
+\thispagestyle{empty}
+\begin{latin}
+    \fontsize{18}{1cm}\textbf{Abstract}:\\
+    At the same time as inventing computers, computer scientists have made efforts to make use of computers in various fields such as visualizing tools, military, entertainment fields and video games industry.\par
+    Designing and implementing 3D render Engines needs some knowledge of 3D mathematics and Graphic processors in general.\par
+    The goal of this project is to study and implement a Real-time 3D Render Engine and will review techniques and methods in this field for various use cases, render engines are the main building block in real-world simulators,  video games, and much more industries that have been categorized in multiple categories, in this project we will focus on a special category, real-time render engines that have many benefits. also in the last section, I'll give you some examples and use cases. 
+\end{latin}
+% end of English abstract
+
+% start of English Cover
+\newpage
+\thispagestyle{empty}
+
+\begin{titlepage}
+\begin{figure}[H]
+    \centering
+        \includegraphics[width=8cm]{images/logoEN.png}
+\end{figure}
+
+% \vspace*{1cm}
+    \begin{center}
+      \large
+      {\fontsize{12}{1cm} \selectfont \textbf{\lr{Shahid Bahonar University of Kerman}}\par}
+      {\fontsize{11}{1cm} \selectfont \textbf{\lr{Faculty of Engineering}}\par}
+      {\fontsize{14}{1cm} \selectfont \textbf{\lr{B.Sc. Thesis}}\par}
+      {\fontsize{16}{1cm} \selectfont \textbf{\lr{Implement a Real-time Render Engine}}\par}
+      {\fontsize{14}{1cm} \selectfont \textbf{\lr{Supervisor : Dr F.Ghasemian}}\par}
+      {\fontsize{14}{1cm} \selectfont \textbf{\lr{By: Ahmad Mansoori}}\par}
+      {\fontsize{13}{1cm} \selectfont \textbf{\lr{Date : 9/18/2021}}}
+    \end{center}
+
+\end{titlepage}
+% End of English Cover
+\newpage
+\thispagestyle{empty}
+\mbox{}
 
 \end{document} 
